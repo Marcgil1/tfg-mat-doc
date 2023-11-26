@@ -1,0 +1,464 @@
+\chapter{Formulations for the Rank Pricing Problem}
+\label{chp:problem-formulations}
+
+As said in the introduction, the resolution of linear programming problems
+requires developing good formulations. Such a requirement is this chapter's main
+motivation, driving the description of its formulations, each one being a small
+improvement over the previous one. We will build on the introduction to the RPP
+given in Section \ref{sec:int:rpp}, and follow sections 2 and 3 of
+\cite{ca:rpp}, from which the formulations of this chapter originate.  The first
+formulation, \bnlp, is a conceptually natural treatment of the problem,
+explicitly representing the bilevel structure of the RPP as an interaction of a
+seller pricing the items and several customers buying them.  From \bnlp we
+obtain by introducing a new set of decision variables the formulation \bnlv.
+
+The introduction of both bilevel formulations will aid the reader to get
+acquainted with the RPP. Furthermore, the second of these formulations, \bnlv,
+will also be the starting point for obtaining the single level formulations \bnl
+and \slnl.
+
+\section{Bilevel formulation} % -----------------------------------------------
+\label{sec:pf:bilevel-formulation}
+
+\subsection{Formulation with variables $p_i$} % ...............................
+\label{ssc:pf:bf:bnlp}
+
+Recall that in the RPP a seller produces some finite set of products, $I$, and
+wants to price them so as to maximise the gains he will obtain through their
+sale. These products are in turn bought by some customers, which are represented
+as elements of a finite set $K$, trying to acquire the most preferred items
+lying within their budget. It is thus conceptually natural to model the RPP as a
+bilevel problem, so that each level represents one of the mentioned types of
+actors, seller and client. On the upper level, the seller prices the items,
+maximising his gains. On the lower level, each client tries to acquire his most
+preferred item, always respecting his budget. Note that these two problems are
+interrelated: by pricing the products, the seller determines which items fall
+within each client's budget. Likewise, by purchasing one item or another, the
+clients determine the seller's profits.
+
+Turning now to our first formulation, $\ii$ will represent an arbitrary item and
+$\kk$ an arbitrary product. Variable $p_i$ is then a real positive value
+representing $i$'s price. These $p_i$ will be the decision variables of the
+upper-level problem, for their value is decided by the seller. We furthermore
+need to consider binary variables $x_i^k$, determining that customer $k$
+acquires item $i$ iff $x_i^k = 1$. As said in the introduction, $s_i^k$
+indicates the preference level of client $k$ for product $i$, being $s_i^k = 0$
+iff $k$ does not want to buy $i$ in any case. Lastly, $b^{\sigma(k)}$ will take
+the value of $k$'s budget. With this notation, formulation \bnlp then the form:
+
+{
+    \newcommand{\sums} {
+        \sum_\kk \sum_\is
+    }
+
+    \begin{eqnarray}
+        \rm{(BNL}^p\rm{)}
+        &\max_p      & \quad \sums p_i x_i^k              \label{eq:bnlp:a}\\
+        &\text{s.t.} & \quad p_i \geq 0, \quad \forall\ii \label{eq:bnlp:b}
+    \end{eqnarray}
+}
+
+\noindent
+where $\forall \kk$, $x^k = (x_i^k)_\ii$ is an optimal solution of the
+problem:
+
+{
+    \newcommand{\sums} {
+        \sum_\is
+    }
+
+    \begin{eqnarray}
+        &\max_{x^k}  & \quad \sums s_i^k x_i^k                  \label{eq:bnlp:c}\\
+        &\text{s.t.} & \quad \sums x_i^k     \leq 1             \label{eq:bnlp:d}\\
+        &            & \quad \sums p_i x_i^k \leq b^{\sigma(k)} \label{eq:bnlp:e}\\
+        &            & \quad x_i^k \in \binset, \forall \is     \label{eq:bnlp:f}
+    \end{eqnarray}
+}
+
+In this formulation, \eqref{eq:bnlp:a} is the sum of prices of each product
+acquired, and thus represents the seller's total revenue. \eqref{eq:bnlp:b}
+state that prices are nonnegative real variables. In the lower level problem,
+\eqref{eq:bnlp:f} state that the $x_i^k$ are binary variables, and
+\eqref{eq:bnlp:d} ensures that client $k$ purchases at most one item. The left
+hand side of \eqref{eq:bnlp:e} then takes the value of the price of the item $i$
+acquired by $x$, so that the inequality restricts the bought items to be among
+those with price falling within $k$'s budget.  The meaning of \eqref{eq:bnlp:c}
+becomes then clear: it is the preference level of the item bought by $k$. Thus,
+maximising this sum, we assure that $x_i^k = 1$ just for the $i$ most preferred
+by $k$ and falling within his budget.
+
+However, in order to prove that this formulation is well-posed, we need to
+assure that the lower level problems have a unique solution. Suppose, for
+instance, that for some customer $k$ the maximum of the lower level problem were
+attained at two different vectors, $x^k$ and $\tilde{x}^k$. This corresponds to
+$k$ being able to select two most-preferred products for a given assignment of
+prices $p$. This would be problematic, for the employment of $x^k$ and
+$\tilde{x}^k$ would give rise to different values for the upper level objective
+function \eqref{eq:bnlp:a}. Next result assures that this situation cannot
+arise.
+
+\begin{proposition}
+    The lower level problems of formulation \bnlp have a unique optimal
+    solution.
+\end{proposition}
+
+\begin{proof}
+    The proof consists on explicitly giving the optimum value of the $x^k$
+    vector, and noting that this value is unique.  Let us consider for this
+    matter the lower level problem associated to some customer $\kk$ and price
+    assignment $p$. If $p_i > b^{\sigma(k)}$ for all products $\ii$, then no
+    $x_i^k$ could take a value of 1, for then \eqref{eq:bnlp:e} would not hold.
+    Thus, $x_i^k=0, \forall\is$ is the only solution in this case.  Otherwise,
+    constraint \eqref{eq:bnlp:d} asserts that at most one $x$-variable $x_i^k$
+    may be non-zero, and the optimal solution is then given by $x_j^k=0$ for all
+    $j\in S^k$ except for the unique $i$ such that $s_i^k=\max\{s_j^k~|~j\in
+    S^k, p_j\leq b^{\sigma(k)}\}$. Note that the uniqueness of solution directly
+    depends on the product preferences $s_i^k$ being all distinct.
+\end{proof}
+
+\subsection{Formulation with variables $v_i^\ell$} % ............................
+\label{ssc:pf:bf:bnlv}
+
+Formulation \bnlp contains both integer (the $x_i^k$) and real (the $p_i$)
+variables. However, the possible values for the $p_i$ may be restricted, so that
+only a finite set of prices must be considered, thus converting the problem to a
+purely integer one. The key insight for this was noted by the authors of
+\cite{ru:nonparametric}, and we phrase it here as a lemma:
+
+\begin{lemma}
+    There exists solutions of \bnlp with $p_i \in B, \forall \ii$.
+\end{lemma}
+
+\begin{proof}
+    This proof is adapted from that of \cite{do:envy}. Suppose that there were
+    an optimal $p$ and a product $\ii$ such that $p_i$ were strictly between two
+    prices in $B$. That is, $b^m < p_i < b^{m+1}$ for some $1 \leq m \leq M -
+    1$. If in this solution no client buys $i$, then we may change its price as
+    we please, and thus obtain a valid optimal solution where $p_i=b^{m+1}$.
+
+    We will prove by contradiction that the reverse case (some client buys $i$)
+    cannot arise. If such a client existed, we could increase $p_i$ up to
+    $b^{m+1}$, and the resulting price assignment would leave invariant the sets
+    of products that customers can afford. Indeed, all clients $\kk$ with
+    $\sigma(k) \leq m$ could not afford $i$ before the change, and cannot afford
+    $i$ after it. Likewise, all $\kk$ with $\sigma(k) \geq m + 1$ could afford
+    $i$ before the change, and after it they still do. Therefore, the increase
+    in $p_i$ is possible. However, this would imply obtaining a feasible
+    solution with an optimal value strictly greater than that of the original
+    optimal solution, which is absurd.
+\end{proof}
+
+Therefore, the set of product prices may be chosen to equal the set of
+client budgets. We will exploit this remark by defining a new set of binary
+variables, $v_i^\ell, \forall\ii, \forall\lm$, which will represent the price
+assigned to the $i$'th item, thus replacing the continuous $p_i$ variables.
+Namely, $v_i^\ell = 1$ iff product $i$ is assigned price $b^\ell$. Using these
+variables, we can replace \eqref{eq:bnlp:b} with
+
+\begin{eqnarray*}
+    \sum_{\ell=1}^M v_i^\ell \leq 1, && \forall \ii,\\
+    v_i^\ell \in \binset,            && \forall \ii, \lm
+\end{eqnarray*}
+
+\noindent
+The first constraints assert, in the same manner as \eqref{eq:bnlp:d}, that each
+product can be assigned at most one price. The second constraints assert that
+the $v_i^\ell$ are binary variables. We also need to replace constraint
+\eqref{eq:bnlp:e} of the lower level problem, restricting the price of the
+products affordable by $k$, with the following constraint:
+
+\[
+    x_i^k \leq \sum_{\ell=1}^{\sigma(k)} v_i^\ell, \quad \forall \kk, \is
+\]
+
+This constraint asserts that $x_i^k$ may only take a value of 1 if $v_i^\ell =
+1$ for some $\ell$ such that $1 \leq \ell \leq \sigma(k)$. Since $b^{\sigma(k)}$
+is $k$'s budget, and $\ell_1 < \ell_2$ implies $b^{\ell_1} < b^{\ell_2}$, this
+means $k$ can only buy $i$ if item $i$ gets assigned a price $b^\ell$ less than
+or equal to its budget.
+
+Through these substitutions, we arrive at a purely integer programming
+formulation, which we will denote by \bnlv:
+
+{
+    \newcommand{\sumk} { \sum_\kk }
+    \newcommand{\sumi} { \sum_\is }
+    \newcommand{\suml} { \sum_{\ell=1}^{\sigma(k)} }
+    \newcommand{\summ} { \sum_{\ell=1}^{M} }
+
+    \begin{eqnarray}
+        \rm{(BNL}^v\rm{)}
+        &\max_v      & \sumk\sumi(\suml b^\ell v_i^\ell) x_i^k     \label{eq:bnlv:a}\\
+        &\text{s.t.} & \summ v_i^\ell \leq 1, \quad \forall\ii     \label{eq:bnlv:b}\\
+        &            & v_i^\ell \in \binset, \quad \forall\is, \lm \label{eq:bnlv:c}
+    \end{eqnarray}
+}
+
+\noindent
+with $x^k$ being solutions to the following problem:
+
+{
+    \newcommand{\sumi} { \sum_\is }
+    \newcommand{\suml} { \sum_{\ell=1}^{\sigma(k)} }
+    
+    \begin{eqnarray}
+        &\max_{x^k}  & \sumi s_i^k x_i^k                                \label{eq:bnlv:d}\\
+        &\text{s.t.} & \sumi x_i^k \leq 1                               \label{eq:bnlv:e}\\
+        &            & x_i^k \leq \suml v_i^\ell, \quad \forall\kk, \is \label{eq:bnlv:f}\\
+        &            & x_i^k \in \binset, \quad \forall\is.             \label{eq:bnlv:g}
+    \end{eqnarray}
+}
+
+\noindent
+Other than the changes already mentioned and leading to constraints
+\eqref{eq:bnlv:b}, \eqref{eq:bnlv:c} and \eqref{eq:bnlv:f}, \bnlv\newline distinguishes
+itself from \bnlp by its upper-level cost function \eqref{eq:bnlv:a}. This is
+obtained from \eqref{eq:bnlp:a} by formally substituting $p_i$ by the term
+$
+    \sum_{\ell=1}^{\sigma(k)} b^\ell v_i^\ell
+$. For each $k$, this sum equals the price given to the $i$'th item, if $k$ can
+afford it, and 0 otherwise.
+
+Changing from $p$ to $v$ variables leads to an interesting consequence. As noted
+in the paper \cite{ca:rpp}, the lower level of \bnlv can be incorporated to the
+upper level problem as a group of constraints, thus converting \bnlv in a
+single-level formulation. The specific way in which this may be archived will be
+explained in the next section.
+
+\subsection{Single level formulation} % .................................................
+\label{ssc:pf:bf:bnl}
+
+One important remark allowed the authors of \cite{ca:rpp} to eliminate the
+lower level problem of \bnlv. This remark was the unimodularity of the matrix
+associated to these problems. As noted in the introductory chapter, if an
+integer formulation has a totally unimodular associated matrix, then the
+solution of its linear relaxation has integer coefficients, thus being possible
+to solve the integer problem as a linear one. The author has developed the
+following proof, which assures that this is indeed the case of our lower level
+problems:
+
+\begin{lemma}
+    The lower level problems of \bnlv have totally unimodular associated
+    matrices.
+\end{lemma}
+
+\begin{proof}
+    We note that the constraint matrix $A$ takes in this case the form
+
+    \begin{equation*}
+        \begin{pmatrix}
+            1      & 1      & 1      & \cdots & 1     \\
+            1      & 0      & 0      & \cdots & 0     \\
+            0      & 1      & 0      & \cdots & 0     \\
+            0      & 0      & 1      & \cdots & 0     \\
+            \vdots & \vdots & \vdots &        & \vdots\\
+            0      & 0      & 0      & \cdots & 1     \\
+            1      & 0      & 0      & \cdots & 0     \\
+            0      & 1      & 0      & \cdots & 0     \\
+            0      & 0      & 1      & \cdots & 0     \\
+            \vdots & \vdots & \vdots &        & \vdots\\
+            0      & 0      & 0      & \cdots & 1     \\
+        \end{pmatrix}
+    \end{equation*}
+
+    \noindent
+    We may then apply result \ref{pro:tu-characterisation} for concluding that
+    $A$ is totally unimodular. Indeed, for any set of columns $J$, we may choose
+    a partition $J_1$, $J_2$ with cardinalities $|J_1|$ and $|J_2|$ with a
+    difference of at most one unit. Then,
+    \begin{itemize}
+        \item
+            For $i = 1$,
+            \[
+                \left| \sum_{j \in J_1} a_{1j} - \sum_{j \in J_2} a_{1j} \right|
+                    = \left| |J_1| - |J_2| \right|
+                    \leq 1
+            \]
+        \item
+	    For $i \neq 1$, row $a_{i\cdot}$ contains exactly one non-zero
+	    entry, and thus
+            \[
+                \left| \sum_{j \in J_1} a_{1j} - \sum_{j \in J_2} a_{1j} \right|
+                    = 1
+            \]
+    \end{itemize}
+\end{proof}
+
+This result assures us that constraints \eqref{eq:bnlv:f} may be relaxed to $0
+\leq x_i^k \leq 1, \forall\is$. Furthermore, once the prices (i.e. the
+$v_i^\ell$ variables) are fixed, the set of products affordable by each customer
+$k$ can be explicitly calculated without resorting to linear constraints as
+$
+    I(k) = \{ i \in S^k~|~\sum_{l=1}^{\sigma(k)} v_i^l = 1 \}
+$.
+These two remarks allow us to write the lower level problem in the following
+manner:
+
+\begin{eqnarray*}
+    &\max_{x^k} & \sum_{i \in I(k)} s_i^k x_i^k\\
+    &\text{s.t.}& \sum_{i \in I(k)}       x_i^k \leq 1\\
+    &           &                         x_i^k \geq 0, \quad i \in I(k).
+\end{eqnarray*}
+
+Note that it is not necessary to explicitly add the restriction $x_i^k \leq 1$,
+for this is already implied by
+$
+    \sum_{i \in I(k)} x_i^k \leq 1
+$.
+Now, we may follow the concepts from duality theory presented in Subsection
+\ref{ssc:int:lp:duality-theory} in order to give for each $\kk$ the dual problem
+of the lower-level problem:
+
+\begin{eqnarray*}
+    &\min_{u^k}  & \quad u^k\\
+    &\text{s.t.} & \quad u^k \geq s_i^k, \quad i \in I(k)\\
+    &            & \quad u^k \geq 0.
+\end{eqnarray*}
+
+\noindent
+Duality theory now allows us to characterise the primal and dual problems'
+solutions $x^k$ and $u^k$ through the following conditions:
+
+\begin{eqnarray}
+    \sum_{i\in I(k)} s_i^kx_i^k &=   & u^k                            \label{eq:c1}\\
+                          u  ^k &\geq& s_i^k \quad \forall i \in I(k) \label{eq:c2}\\
+    \sum_{i\in I(k)}      x_i^k &\leq& 1\notag\\
+                   x_i^k, u  ^k &\geq& 0\notag.
+\end{eqnarray}
+
+Note that equation \eqref{eq:c1} and inequalities \eqref{eq:c2} may be combined
+into a single inequality not containing $u^k$, so that the system of
+inequalities results in a set of conditions over $x^k$ alone. These relations
+hold the key to removing the lower-level problem from \bnlv and for obtaining the
+following formulation, for their inclusion in the upper level problem will
+result in $x_k$ having the same meaning as that given by being solution to the
+lower level problem. We thus arrive to the following single-level formulation
+for the RPP:
+
+{
+    \newcommand{\sumk} { \sum_\kk }
+    \newcommand{\sumi} { \sum_\is }
+    \newcommand{\sumj} { \sum_{j\in S^k} }
+    \newcommand{\suml} { \sum_{\ell=1}^{\sigma(k)} }
+    \newcommand{\summ} { \sum_{\ell=1}^{M} }
+
+    \begin{eqnarray}
+        \rm{(BNL)}
+        &\max_{v,x}  & \sumk\sumi(\suml b^\ell v_i^\ell) x_i^k                            \label{eq:bnl:a}\\
+        &\text{s.t.} & \summ v_i^\ell \leq 1, \quad \forall\ii                            \label{eq:bnl:b}\\
+        &            & \sumi x_i^k    \leq 1, \quad \forall\kk                            \label{eq:bnl:c}\\
+        &            & x_i^k \leq \suml v_i^\ell, \quad \forall\kk, \ii                   \label{eq:bnl:d}\\
+        &            & \sumj s_j^k x_j^k \geq s_i^k\suml v_i^\ell, \quad \forall\kk, \is  \label{eq:bnl:e}\\
+        &            & v_i^\ell, x_i^k \in \binset, \quad \forall\kk, \is, \lm            \label{eq:bnl:f}
+    \end{eqnarray}
+}
+
+The problem is now over two sets of variables, $v$ and $x$. Cost function
+\eqref{eq:bnl:a} is the same as \eqref{eq:bnlv:a}, and constraints
+\eqref{eq:bnl:b} correspond to \eqref{eq:bnlv:b}. Conditions \eqref{eq:bnl:c}
+and \eqref{eq:bnl:d} correspond to \eqref{eq:bnlv:e} and \eqref{eq:bnlv:f}
+above. Finally, constraints \eqref{eq:bnl:e} have been obtained from the
+conditions above mentioned, by combining \eqref{eq:c1} and \eqref{eq:c2} into a
+single inequality, so that explicit reference to $u^k$ can be removed.
+
+Thus, if some vectors $v$, $x$ satisfy conditions \eqref{eq:bnl:b} to
+\eqref{eq:bnl:f}, $v$ will be a valid price assignment, and all $x^k$ will
+verify \eqref{eq:c1} and \eqref{eq:c2}, thus being a solution to the lower level
+problem of \bnlp. Therefore, BNL is a valid formulation for the RPP.
+
+\section{Alternative single level formulation} % -------------------------------
+\label{sec:pf:alternative}
+
+We will now use the concepts and terminology of Section
+\ref{sec:pf:bilevel-formulation} to introduce a new single level formulation for
+the \rpp which will serve as the basis for the further development of this work.
+Firstly, we will need to define two families of sets which will be used in the
+new formulation.
+
+\begin{definition}
+    For any customer $\kk$ and products $i,j\in S^k$, we say that $i$ is
+    $k$-better than $j$ if $k$ prefers product $i$ over product $j$. We denote
+    the set of products $k$-better than $i$ as
+    $
+        B(k,i) = \{j\in S^k \mid j\text{ is } k\text{-better than } i\}
+    $.
+    
+    Similarly, $i$ is defined to be $k$-worse than $j$ if $k$ prefers product
+    $j$ over product $i$. The set of products $k$-worse than $i$ is denoted by
+    $
+        \overline{B(k,i)} = \{j\in S^k \mid j\text{ is } k\text{-worse than } i\}
+    $.
+\end{definition}
+
+We may use these sets in the following manner. A customer $k$ buys product $i$
+iff $i$'s price is within $k$'s budget, and all products $j$ that are $k$-better
+than $i$ are above $k$'s budget. Using the price-indicator variables $v_j^\ell$,
+this is equivalent to asserting that $x_i^k=1$ iff
+
+\[
+    \sum_{\ell=1}^{\sigma(k)} v_i^\ell = 1 \text{ and }
+        \sum_{\ell=1}^{\sigma(k)} v_j^\ell = 0, \forall j\in B(k, i).
+\]
+
+This property lends itself towards defining constraints (4d) and (4e) in the
+following single level non-linear formulation \slnl:
+
+\begin{eqnarray}
+    \rm{(SLNL)}
+    &\max_{v,x}  & \sum_\kk\sum_{i\in S^k} (\sum_{\ell=1}^{\sigma(k)} b^\ell v_i^\ell)x_i^k \label{eq:slnl:a}\\
+    &\text{s.t.} & \sum_{i\in S^k} x_i^k \leq 1, \quad\forall\kk                            \label{eq:slnl:b}\\
+    &            & \sum_{\ell=1}^M v_i^\ell \leq 1, \quad\forall\ii                         \label{eq:slnl:c}\\
+    &            & x_i^k + \sum_{\ell=1}^{\sigma(k)} v_j^\ell \leq 1, \quad \forall\kk, i \in S^k, j\in B(k, i) \label{eq:slnl:d}\\
+    &            & x_i^k + \sum_{\ell=\sigma(k)+1}^M v_i^\ell \leq 1, \quad \forall\kk, i \in S^k               \label{eq:slnl:e}\\ 
+    &            & v_i^\ell, x_i^k\in\{0,1\}, \forall\kk, i\in S^k, \ell\in\{1, \ldots, M\}.                    \label{eq:slnl:f}
+\end{eqnarray}
+
+The objective function \eqref{eq:slnl:a} is the same as that of \bnl,
+\eqref{eq:bnl:a}. Restriction families \eqref{eq:slnl:b} and \eqref{eq:slnl:c}
+correspond, respectively, to \eqref{eq:bnl:c} and \eqref{eq:bnl:b}. Restriction
+family \eqref{eq:slnl:e} results of combining \eqref{eq:bnl:d} and
+\eqref{eq:bnl:b}, and for a customer $k$ and a product $i$, it means that if $k$
+buys $i$, then $i$'s price is not higher than $k$'s budget. Finally, constraint
+family \eqref{eq:slnl:d} is obtained from the remark above, and means that if
+$k$ buys $i$, then it does not buy any product $j$ that is $k$-better than $i$.
+
+Finally, the authors of \cite{ca:rpp} noted that constraints \eqref{eq:slnl:d}
+can be strenghened by considering the following family of constraints:
+
+\begin{proposition}
+    The following inequalities are valid constraints for the problem \slnl and
+    dominate constraints \eqref{eq:slnl:d}:
+
+    \begin{equation}
+        \sum_{j\in\overline{B(k, i)}} x_j^k
+            + \sum_{\ell=1}^{\sigma(k)} v_i^\ell \leq 1
+            , \quad \forall \kk,
+                            i \in S^k \text{ such that }
+                                \overline{B(k, i)} \neq \varnothing.
+        \label{eq:slnl:valid-inequalities}
+    \end{equation}
+\end{proposition}
+
+\begin{proof}
+    First, we will prove that constraints \eqref{eq:slnl:valid-inequalities} are
+    valid. i.e. that every solution to \slnl verifies them. If product $i$ is
+    within customer $k$'s budget, then $\sum_{\ell=1}^{\sigma(k)} v_i^\ell=1$.
+    Furthermore, none product $k$-worse than $i$ will be bought, and so
+    $\sum_{j\in \overline{B(k, i)}} x_j^k=0$. Thus,
+    \eqref{eq:slnl:valid-inequalities} holds in this case. If product $i$ is not
+    within $k$'s budget, then $\sum_{\ell=1}^{\sigma(k)} v_i^\ell=0$.
+    Furthermore, at most one product $k$-worse than $i$ will be bought, and so
+    $\sum_{j\in \overline{B(k, i)}} x_j^k \leq 1$. Thus,
+    \eqref{eq:slnl:valid-inequalities} always hold.
+
+    Secondly, we will prove that \eqref{eq:slnl:valid-inequalities} dominate
+    \eqref{eq:slnl:d}. For that, let $\kk$, $\is$ and $j \in B(k, i)$, so that
+    $x_i^k + \sum_{\ell=1}^{\sigma(k)}v_j^\ell \leq 1$. Since $j$ is $k$-better
+    than $i$, $i$ is $k$-worse than $j$, and thus $x_i^k \leq \sum_{i' \in
+    \overline{B(k,j)}} x_{i'}^k$. Therefore,
+
+    \[
+        \sum_{j\in\overline{B(k, i)}} x_j^k
+            + \sum_{\ell=1}^{\sigma(k)} v_i^\ell \leq 1.
+    \]
+\end{proof}

@@ -1,0 +1,55 @@
+\documentclass
+    [11pt]
+    {book}
+
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{tabularx}
+\usepackage{textcomp}
+\usepackage{tikz}
+\usepackage{verbatim}
+\usepackage{xcolor}   % used for color inversion.
+\usepackage{xfrac}
+
+\newcolumntype{Y}{>{\raggedleft\arraybackslash}X}
+
+\usepackage
+    [spanish,
+     english]
+    {babel} 
+\usepackage
+    [ruled,
+     noend]
+    {algorithm2e}
+\usepackage
+    [margin=2.5cm]
+    {geometry}
+\usepackage
+    [nocfg]
+    {nomencl}
+\usepackage
+    [T1]
+    {fontenc}
+\usepackage
+    [official]
+    {eurosym}
+
+\graphicspath{
+    {resources/img},
+}
+
+\usetikzlibrary{patterns}
+\usetikzlibrary{graphs,graphdrawing}
+\usegdlibrary  {trees}
+
+\makenomenclature
+
+\usepackage{fouriernc}
+
+%\pagecolor[rgb]{0,   0,   0  }
+%\color    [rgb]{0.7, 0.7, 0.7}
+\newcommand{\fgcol} {black}
+\newcommand{\bgcol} {white}

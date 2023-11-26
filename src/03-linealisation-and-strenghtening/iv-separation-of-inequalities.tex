@@ -1,0 +1,242 @@
+\section{Separation of inequalities} % -----------------------------------------
+\label{sec:las:separation}
+
+\newcommand{\ox}     {\overline{x}}
+\newcommand{\ov}     {\overline{v}}
+\newcommand{\oz}     {\overline{z}}
+\newcommand{\fracsol}{$(\ox_i^k, \ov_i^\ell, \oz^k)$}
+
+\subsection{Introduction} % ....................................................
+\label{ssc:las:soi:introduction}
+
+The section will start with formulation \slla in mind, but its similarity with
+\sllb will cause the conclusions for \slla to also be applicable to \sllb.  Let
+us thus consider a fractional solution of \slla, \fracsol. The strategy will be
+to find integers $r_i^k$ and sets $Q_i^k$ minimising the value of the right-hand
+side of \eqref{eq:sll1-inequalities}. he resulting inequality will be added to
+\slla iff it separates the fractional solution from the feasible set. That is,
+iff it is violated by \fracsol.
+
+Note that the sum of the right-hand side of \eqref{eq:sll1-inequalities} may be
+minimised by choosing each $r_i^k, Q_i^k, \forall\is$ so as to minimise the
+summand corresponding to product $i$. Therefore, for each $\is$ the following
+problem must be solved
+\begin{equation}
+    \min_{r \in       \{0, \ldots, \sigma(k)\}\\
+          Q \subseteq \{1, \ldots, r - 1\}} \left(
+        b^r \ox_i^k
+        + \sum_{\ell = r + 1}^{\sigma(k)}
+            \left(b^\ell - b^r\right)\ov_i^\ell
+        + \sum_{\ell \in Q}
+            \left(b^\ell - b^r\right)\left(\ox_i^k + \ov_i^k - 1\right)
+    \right).
+    \label{eq:minimisation-problem}
+\end{equation}
+
+We have defined $r = r_i^k$ and $Q = Q_i^k$ in order to simplify the notation.
+Note that the result of this minimisation problem also minimises the right-hand
+side of \eqref{eq:sll2-inequalities} for $x = \ox_i^k$ and $v = \ov_i^\ell$.
+This will permit in \sllb the same separation schema that presented for \slla.
+Studying \eqref{eq:minimisation-problem}, the following conclusion is reached:
+
+\begin{lemma}
+    For a fixed $r$, a possible value of $Q^r \subseteq \{1, \ldots, r-1\}$
+    minimising \eqref{eq:minimisation-problem} is
+    \[
+        Q^r = \{
+            \ell \in \{1, \ldots, r-1\}
+            ~:~
+            \ox_i^k + \ov_i^\ell > 1
+        \}.
+    \]
+\end{lemma}
+
+\begin{proof}
+    It suffices to note that the only summand in \eqref{eq:minimisation-problem}
+    depending on $Q$ is
+    \[
+        \sum_{\ell \in Q} \left(b^\ell - b^r\right)\left(\ox_i^k + \ov_i^\ell - 1\right).
+    \]
+    Since $Q \subseteq \{1, \ldots, r - 1\}$, the term $b^\ell - b^r$ is always
+    negative in the sum above. Therefore, an optimal $Q^r$ contains all $\ell$
+    such that
+    $
+        \ox_i^k + \ov_i^\ell - 1 > 0
+    $,
+    and no $\ell$ for which
+    $
+        \ox_i^k + \ov_i^\ell - 1 < 0
+    $.
+\end{proof}
+
+This way, defining $S(r)$ to be the objective value of
+\eqref{eq:minimisation-problem} when $Q = Q^r$, we may devote ourselves to
+studying the following problem, which is equivalent to
+\eqref{eq:minimisation-problem}:
+
+\begin{equation}
+    \min_{r \in \{0, \ldots, \sigma(k)\}} S(r)
+    \label{eq:alt-minimisation-problem}
+\end{equation}
+
+\subsection{Minimisation of $S$} % .............................................
+\label{ssc:las:soi:minimisation}
+
+In this section, $S$'s minimum will be found. The objective is to prove that $S$
+has a very concrete shape: it is first decreasing, then increasing. We will
+start presenting the following auxiliary result characterising the first
+difference of $S$:
+
+\begin{lemma}
+    If $r < \sigma(k)$, then
+    \[
+        S(r + 1) - S(r) =
+            \left(b^{r + 1} - b^r\right)
+            \left(
+                \ox_i^k
+                + \sum_{\ell = r + 1}^{\sigma(k)} \ov_i^\ell
+                + \sum_{\ell \in Q^{r + 1}} (1 - \ox_i^k - \ov_i^\ell).
+            \right)
+    \]
+\end{lemma}
+
+\begin{proof}
+    The result can be obtained by a direct derivation:
+    \begin{eqnarray*}
+        &S(r + 1)
+             &-  S(r)\\
+        &    &=  \left(
+                    b^{r+1}\ox_i^k
+                    + \sum_{\ell = r + 2}^{\sigma(k)}
+                        \left(b^\ell - b^{r + 1}\right)\ov_i^\ell
+                    + \sum_{\ell \in Q^{r + 1}}
+                        \left(b^\ell - b^r\right) \left(\ox_i^k + \ov_i^\ell - 1\right)
+                \right)\\
+        &    &\quad -\left(
+                    b^r\ox_i^k
+                    + \sum_{\ell = r + 1}^{\sigma(k)}
+                        \left(b^\ell - b^r\right)\ov_i^\ell
+                    + \sum_{\ell \in Q^r}
+                        \left(b^\ell - b^{r + 1}\right) \left(\ox_i^k + \ov_i^\ell - 1\right)
+                \right)\\
+        &    &=  \left(b^{r+1}-b^r\right)\ox_i^k
+                + \sum_{\ell = r + 2}^{\sigma(k)}
+                    \left(b^r - b^{r + 1}\right)\ov_i^\ell
+                - \left(b^{r + 1} - b^r\right)\ov_i^{r + 1}\\
+        &    &\quad +\sum_{\ell \in Q^{r + 1}}
+                    \left(b^r - b^{r + 1}\right)\left(\ox_i^k + \ov_i^\ell - 1\right)\label{eq:s-diff-aux}\\
+        &    &=  \left(b^{r + 1} - b^r\right)
+                \left(
+                    \ox_i^k
+                    - \sum_{\ell = r + 1}^{\sigma(k)} \ov_i^\ell
+                    + \sum_{\ell \in Q^{r + 1}} \left(1 - \ox_i^k - \ov_i^\ell\right)
+                \right).
+    \end{eqnarray*}
+
+    In \eqref{eq:s-diff-aux}, it has been used that $Q^{r + 1} = Q^r \cup \{ r
+    \}$ if $\ox_i^k + \ov_i^r > 1$ and $Q^{r + 1} = Q^r$ otherwise.
+\end{proof}
+
+This expression may now be used to prove that $S$ is of the form described at
+the start of the section (decreasing, then increasing). This is done by proving
+the following result:
+
+\begin{proposition}
+    If $0 < r < \sigma(k)$, then $S(r) - S(r - 1) \geq 0$ implies that $S(r + 1)
+    - S(r) \geq 0$.
+\end{proposition}
+
+\begin{proof}
+    Since $b^{r + 1} - b^r > 0$, from
+    \[
+        S(r + 1) - S(r) =
+            \left(b^{r + 1} - b^r\right)
+            \left(
+                \ox_i^k
+                + \sum_{\ell = r + 1}^{\sigma(k)} \ov_i^\ell
+                + \sum_{\ell \in Q^{r + 1}} \left(1 - \ox_i^k - \ov_i^\ell\right)
+            \right)
+    \]
+    we infer that $S(r) - S(r - 1) \geq 0$ iff
+    \[
+        \ox_i^k
+        + \sum_{\ell = r}^{\sigma(k)} \ov_i^\ell
+        + \sum_{\ell \in Q^r} \left(1 - \ox_i^k - \ov_i^\ell\right)
+        \geq 0.
+    \]
+    Therefore, in order to prove $S(r + 1) - S(r) \geq 0$, it suffices to show
+    that
+    \[
+            \ox_i^k
+            + \sum_{\ell = r + 1}^{\sigma(k)} \ov_i^\ell
+            + \sum_{\ell \in Q^{r + 1}} \left(1 - \ox_i^k - \ov_i^\ell\right)
+        \geq
+            \ox_i^k
+            + \sum_{\ell = r}^{\sigma(k)} \ov_i^\ell
+            + \sum_{\ell \in Q^r} \left(1 - \ox_i^k - \ov_i^\ell\right).
+    \]
+    However,
+    \begin{align*}
+        \ox_i^k
+        + \sum_{\ell = r + 1}^{\sigma(k)} \ov_i^\ell
+            &+ \sum_{\ell \in Q^{r + 1}} \left(1 - \ox_i^k - \ov_i^\ell\right)
+             - \left(
+                   \ox_i^k
+                   + \sum_{\ell = r}^{\sigma(k)} \ov_i^\ell
+                   + \sum_{\ell \in Q^r} \left(1 - \ox_i^k - \ov_i^\ell\right)
+               \right)\\
+            &= \ov_i^r +
+                \begin{cases}
+                    0,                     &\text{ if } Q^{r + 1} = Q^r\\
+                    1 - \ox_i^k - \ov_i^r, &\text{ otherwise}
+                \end{cases}\\
+            &=  \begin{cases}
+                    \ov_i^r,     &\text{ if } Q^{r + 1} = Q^r\\
+                    1 - \ov_i^k, &\text{otherwise}
+                \end{cases}\\
+            &\geq 0.
+    \end{align*}
+    Which finishes the proof.
+\end{proof}
+
+Therefore, $S(r)$ reaches its minimum value for the least $0 < r < \sigma(k)$
+such that $S(r) - S(r - 1) \leq 0$ and $S(r + 1) - S(r) > 0$, if it exists; $r =
+0$ if $S$ is strictly increasing, or $r = \sigma(k)$ if it is strictly
+decreasing or constant. This characterisation lends itself to a simple algorithm
+for finding this $r$: simply iterate from $r = 1$ to $\sigma(k) - 1$ until the
+minimality condition is satisfied.
+
+However, continuing this study of the difference $S(r + 1) - S(r)$, a simple
+rule for easily concluding $S(r) - S(r - 1) \leq 0$ may be obtained without
+having to compute
+$
+    \sum_{\ell \in Q^{r + 1}} \left(1 - \ox_i^k - \ov_i^\ell\right)
+$:
+
+\begin{lemma}
+    If
+    $
+        \ox_i^k \leq \sum_{\ell = 1}^{\sigma(k)} \ov_i^\ell
+    $,
+    then $S(r) - S(r - 1) \leq 0$.
+\end{lemma}
+
+\begin{proof}
+    It is enough to note that $b^{r + 1} - b^r$ is always positive and
+    $
+        \sum_{\ell \in Q^{r + 1}}\left(1 - \ox_i^k - \ov_i^\ell\right)
+    $
+    always less than or equal to zero.
+\end{proof}
+
+\subsection{Separation algorithm} % ............................................
+\label{ssc:las:soi:separation-algorithm}
+
+Last section presented a method for solving minimisation problem
+\eqref{eq:minimisation-problem}. As indicated in Subsection
+\ref{ssc:las:soi:introduction}, it may now be checked whether the restriction
+resulting from this minimisation procedure is violated by \fracsol. If that were
+the case, it would be added to \slla. This procedure is resumed in the following
+algorithm:
+
+\input{src/03-linealisation-and-strenghtening/iv-algos}

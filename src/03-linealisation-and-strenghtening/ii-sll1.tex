@@ -1,0 +1,377 @@
+\section{First single level linear formulation} % ------------------------------
+\label{sec:las:sll1}
+
+\subsection{Formulation} % .....................................................
+\label{ssc:las:sll1:formulation}
+
+The function to linearise is the sum of the prices of all sold products.  One
+way of proceeding is defining a new set of variables over which
+\eqref{eq:slnl:a} is a linear function. In this case, we will use, for each
+client $k$, $z^k$, the benefit obtained from client $k$. Thus, the objective may
+be expressed as the sum of the benefits obtained from each client. i.e.,
+
+\[
+    \max_{v,x,z} \sum_\kk z^k
+\]
+
+Several restrictions will be added to the formulation that will relate $z^k$
+with the old variables in order to codify $z^k$'s meaning. These restrictions
+will be the following:
+
+{
+    \newcommand{\suml} {\sum_{\ell=1}^{\sigma(k)}}
+    \newcommand{\sumi} {\sum_\is}
+    
+    \begin{eqnarray}
+        z^k &\leq& \suml b^\ell v_i^\ell + b^{\sigma(k)}\left(1-x_i^k\right),
+            \quad \forall\kk, \is \label{eq:sll1-prev:a}\\
+        z^k &\leq& b^{\sigma(k)} \sumi x_i^k
+            \quad \forall\kk      \label{eq:sll1-prev:b}\\
+        z^k &\geq& 0
+            \quad \forall\kk.     \label{eq:sll1-prev:c}
+    \end{eqnarray}
+}
+
+These inequalities codify $z^k$'s meaning in the following manner: If $k$ cannot
+acquire any product in its preference list, then the benefit from him obtained
+will be zero. If $k$ acquires the (unique) product $i$, the benefit from him
+obtained will be $i$'s price,
+$
+    \sum_{\ell=1}^{\sigma(k)} b^\ell v_i^\ell
+$.
+More concretely,
+\begin{enumerate}
+    
+    \item % k no compra
+        If $k$ acquires no product, then
+        $
+            \sum_\is x_i^k = 0
+        $,
+	and \eqref{eq:sll1-prev:b} implies then $z^k \leq 0$, the desired value of
+	$z^k$ in this case. Furthermore, for all $\is$,
+	\[
+	    z^k \leq 0 \leq \sum_{\ell=1}^{\sigma(k)} b^\ell v_i^\ell + b^{\sigma(k)}
+	\]
+	and thus restrictions \eqref{eq:sll1-prev:a} do not change $z^k$'s
+	meaning.
+    \item % k sí compra
+	If $k$ acquires product $i_0 \in S^k$, then
+	$b^{\sigma(k)}\left(1-x_{i_0}^k\right)=0$, and \eqref{eq:sll1-prev:a} leads to
+	\[
+	    z^k \leq \sum_{\ell=1}^{\sigma(k)} b^\ell v_{i_0}^\ell.
+	\]
+	Thus, $z^k$ is less than or equal to the price assigned to $i_0$. For
+	any other $\is, i \neq i_0$, the restriction \eqref{eq:sll1-prev:a} is
+	redundant
+	$
+	    z^k \leq \sum_{\ell=1}^{\sigma(k)} b^\ell v_i^\ell + b^{\sigma(k)}
+	        =    b^{\sigma(k)}
+	$,
+	as well as \eqref{eq:sll1-prev:b}:
+	$
+	    z^k \leq b^{\sigma(k)}\sum_\is x_i^k = b^{\sigma(k)}.
+	$
+	
+\end{enumerate}
+
+These constraints would suffice for defining the new formulation. However, a
+further improvement must be made on them by noting that \eqref{eq:sll1-prev:a}
+can be reinforced as follows:
+
+\begin{proposition}
+    For any $\kk$, the following is a reinforcement of \eqref{eq:sll1-prev:b}:
+    {
+        \newcommand{\suml}    {\sum_{\ell=1}^{\sigma(k)}}
+        \newcommand{\sumi}    {\sum_{\is}}
+        \newcommand{\sumjneq} {\sum_{j \in S^k : j \neq i}}
+
+        \begin{equation}
+            z^k \leq \suml b^\ell v_i^\ell + b^{\sigma(k)} \sumjneq x_j^k,
+                \quad \forall \kk, \is. \label{eq:sll1-prev:d}
+        \end{equation}
+    }
+\end{proposition}
+
+\begin{proof}
+    The proof is done by a case analysis:
+    \begin{itemize}
+            
+        \item % k no compra ningún i
+            If $k$ buys no $i' \in S^k$, then
+            {
+                \newcommand{\sumjneq} {\sum_{j \in S^k : j \neq i}}
+                $\sumjneq x_j^k = 0$
+            }
+            and the restriction results
+            $
+                z^k \leq \sum_{\ell=1}^{\sigma(k)} b^\ell v_i^\ell
+            $,
+	    thus being redundant, for in this case, \eqref{eq:sll1-prev:b} takes
+	    the form $z^k \leq 0$.
+        \item % k compra i_0 \neq i
+            If $k$ buys some $i_0 \neq i$, then
+            {
+                \newcommand{\sumjneq} {\sum_{j \in S^k : j \neq i}}
+                $\sumjneq x_j^k = 1$
+            }
+            and the restriction results
+            $
+                z^k \leq
+                    \sum_{\ell=1}^{\sigma(k)} b^\ell v_i^\ell
+                    + b^{\sigma(k)}
+            $,
+            as the corresponding one in \eqref{eq:sll1-prev:a}.
+        \item % k compra precisamente i
+            If $k$ buys precisely $i$, the restriction results
+            $
+                z^k \leq \sum_{\ell=1}^{\sigma(k)} b^\ell v_i^\ell
+            $,
+            as the corresponding one in \eqref{eq:sll1-prev:a}.
+    \end{itemize}
+\end{proof}
+
+Finally, the new objective function, variables, and constraints can be added to
+\slnl in order to obtain the following formulation, named \slla:
+{
+    \newcommand{\bover}   {\overline{B(k, i)}}
+    \newcommand{\bne}     {\bover\neq\varnothing}
+    \newcommand{\sumk}    {\sum_{\kk}}
+    \newcommand{\sumi}    {\sum_{\is}}
+    \newcommand{\sumlm}   {\sum_{\ell=1}^{M}}
+    \newcommand{\sumj}    {\sum_{j\in\bover}}
+    \newcommand{\sumls}   {\sum_{\ell=1}^{\sigma(k)}}
+    \newcommand{\sumlsm}  {\sum_{\ell=\sigma(k)+1}^{M}}
+    \newcommand{\sumjneq} {\sum_{j \in S^k : j \neq i}}
+    
+    \begin{eqnarray}
+        &\max_{v, x, z}
+             & \sumk z^k                                                \label{eq:sll1:a}\\
+        &\text{s.t.}
+             & \sumi  x_i^k                  \leq 1, \quad\forall\kk    \label{eq:sll1:b}\\
+        &    & \sumlm v_i^\ell               \leq 1, \quad\forall\ii    \label{eq:sll1:c}\\
+        &    & \sumj x_j^k + \sumls v_i^\ell \leq 1, \quad\forall\kk,\is:\bne
+                                                                        \label{eq:sll1:d}\\
+        &    & x_i^k + \sumlsm v_i^\ell      \leq 1, \quad\forall\kk,\is\label{eq:sll1:e}\\
+        &    & z^k \leq \sumls b^\ell v_i^\ell + b^{\sigma(k)}\sumjneq x_j^k,
+                                                     \quad\forall\kk,\is\label{eq:sll1:f}\\
+        &    & z^k \leq b^{\sigma(k)}\sumi x_i^k,    \quad\forall\kk    \label{eq:sll1:g}\\
+        &    & v_i^\ell, x_i^k \in \binset, z^k\geq 0\quad\forall\kk,\is,\lm
+                                                                       \label{eq:sll1:h}
+    \end{eqnarray}
+}
+
+\subsection{Inequalities} % ....................................................
+\label{ssc:las:sll1:inequalities}
+
+As already noted, \slla is a valid formulation for the Rank Pricing Problem.
+However, the newly introduced families of inequations, \eqref{eq:sll1:f} and
+\eqref{eq:sll1:g}, are weak restrictions on $z^k$ that may give poor linear
+relaxations during the execution of the branch-and-bound procedure. To see this,
+note that both right hand sides of \eqref{eq:sll1:f} and \eqref{eq:sll1:g}
+contain a sum of $x_i^k$ variables multiplied by the constant quantity
+$b^{\sigma(k)}$, which may be quite big. Therefore, if for some instance
+$z^{k_0} = 0$ for some client $k_0$, then the $x_i^{k_0}$ variables may take any
+value whatsoever.
+
+In order to alleviate this issue, the authors of \cite{ca:rpp} defined the
+following set of valid inequalities for formulation \slla, which impose further
+bounds on the variables:
+
+\begin{proposition}
+    For any customer $\kk$, integers $r_i^k\in\{0,\ldots,\sigma(k)\}~\forall\is$
+    and subsets $Q_i^k\subseteq\{1,\ldots,r_i^k-1\}~\forall\is$, the following
+    is a valid inequality for problem \slla:
+
+    \begin{equation}
+        z^k \leq \sum_\is \left(
+            b^{r_i^k}x_i^k
+            + \sum_{\ell=r_i^k+1}^{\sigma\left(k\right)}
+                \left(b^\ell - b^{r_i^k}\right) v_i^\ell
+            + \sum_{\ell\in Q_i^k}
+                \left(b^\ell - b^{r_i^k}\right) \left(x_i^k+v_i^\ell-1\right)
+        \right).
+        \label{eq:sll1-inequalities}
+    \end{equation}
+\end{proposition}
+
+\begin{proof}
+    The proof proceeds by analysing two cases, proving for each of them that the
+    right-hand side of \eqref{eq:sll1-inequalities} takes a value greater or
+    equal to that of a valid restriction of $z^k$ (\eqref{eq:sll1:f} or
+    \eqref{eq:sll1:g}).
+
+    Let us suppose that $x_{i_0}^k=1$ for some $i_0 \in S^k$. That is, that $k$
+    buys product $i$, and focus on the summand of \eqref{eq:sll1-inequalities}
+    corresponding to $i_0$:
+
+    \begin{equation}
+        b^{r_{i_0}^k}x_{i_0}^k
+            + \sum_{\ell = r_{i_0}^k + 1}
+                \left(
+                    b^\ell - b^{r_{i_0}^k}
+                \right) v_{i_0}^\ell
+            + \sum_{\ell \in Q_{i_0}^k  }
+                \left(
+                    b^\ell - b^{r_{i_0}^k}
+                \right)
+                \left(
+                    x_{i_0}^k + v_{i_0}^\ell - 1
+                \right).
+        \label{eq:sll1-inequalities:aux}
+    \end{equation}
+
+    Since $i_0$ must be within $k$'s budget, there exists some $\ell_0 \leq
+    \sigma(k)$ such that $v_{i_0}^{\ell_0} = 1$. It will be proved by a further
+    case analysis on $\ell_0$ that \eqref{eq:sll1-inequalities:aux} is greater
+    than or equal to the price assigned to $i_0$, $b^{\ell_0}$.
+    \begin{enumerate}
+        
+        \item % \ell_0 >  r_{i_0}^k
+            If $\ell_0 > r_{i_0}^k$, then $v_{i_0}^\ell = 0$ for every
+            $
+                \ell \in Q_{i_0}^k \subseteq \{1, \ldots, r_{i_0}^k - 1\}
+            $,
+            so
+            $
+                \sum_{\ell \in Q_{i_0}^k}
+                    \left(b^\ell - b^{r_{i_0}^k}\right)\left(x_{i_0}^k + v_{i_0}^\ell - 1\right) = 0
+            $
+            and, since a product has no more than one price,
+            $
+                \sum_{\ell = r_i^k + 1}^{\sigma\left(k\right)}
+                    \left(b^\ell - b^{r_{i_0}^k}\right)v_{i_0}^\ell
+                = b^{\ell_0} - b^{r_{i_0}^k}.
+            $
+            Finally, \eqref{eq:sll1-inequalities:aux} reduces thus to
+            $
+                b^{r_{i_0}^k} + b^{\ell_0} - b^{r_{i_0}^k} = b^{\ell_0}.
+            $
+            
+        \item % \ell_0 <= r_{i_0}^k
+	    If, on the contrary, $\ell_0 \leq r_{i_0}^k$, then $v_{i_0}^\ell =
+	    0$ for any $\ell > r_{i_0}^k$, and the first sum is now the one
+	    which vanishes,
+            $
+                \sum_{\ell = r_{i_0}^k + 1}^{\sigma(k)}
+                    \left(b^\ell - b^{r_{i_0}^k}\right)v_{i_0}^\ell
+                = 0
+            $,
+            so that \eqref{eq:sll1-inequalities:aux} gets reduced to
+            \[
+                b^{r_{i_0}^k}
+                    + \sum_{\ell \in Q_{i_0}^k}
+                        (b^\ell - b^{r_{i_0}^k}) v_{i_0}^k.
+            \]
+            If $\ell_0 \in Q_{i_0}^k$, this quantity is
+            $
+                b^{r_{i_0}^k} + b^\ell - b^{r_{i_0}^k} = b^\ell
+            $.
+	    If $\ell \not\in Q_{i_0}^k$, then \eqref{eq:sll1-inequalities:aux}
+	    equals $b^{r_{i_0}^k}$, which is larger than $b^{\ell_0}$, for we
+	    are supposing that $\ell_0 \leq r_{i_0}^k$.
+        
+    \end{enumerate}
+
+    In any case, if $k$ buys some $i_0$, the corresponding summand of $i_0$ in
+    the right-hand side of \eqref{eq:sll1-inequalities}, and therefore all of the
+    right-hand side, is greater than or equal to the maximum value of $z^k$
+    allowed by restriction \eqref{eq:sll1:f}. Thus, \eqref{eq:sll1-inequalities} is
+    a valid inequality in this case.
+
+    Let us now suppose that $x_i^k = 0$ for all $\is$; that is, $k$ buys no
+    product. Consider the summand of \eqref{eq:sll1-inequalities} associated to an
+    arbitrary product $\is$:
+    \[
+        \sum_{\ell = r_i^k + 1} \left(b^\ell - b^{r_i^k}\right)v_i^\ell
+            + \sum_{\ell \in Q_i^k} \left(b^\ell - b^{r_i^k}\right)\left(v_i^\ell - 1\right).
+    \]
+
+    Note that the term $b^{r_i^k}x_i^k$ has been removed, since $x_i^k = 0$. As
+    in the first summand $\ell \geq r_i^k + 1$, $b^\ell - b^{r_i^k} > 0$, so
+    $
+        \sum_{\ell = r_i^k + 1}^{\sigma\left(k\right)}
+            \left(b^\ell - b^{r_i^k}\right)v_i^\ell \geq 0
+    $.
+    As in the second summand $\ell < r_i^k$, $b^\ell - b^{r_i^k} < 0$, and
+    $v_i^\ell - 1 \leq 0$, so
+    $
+        \sum_{\ell \in Q_i^k} \left(b^\ell - b^{r_i^k}\right)\left(v_i^\ell - 1\right) \geq 0
+    $.
+    Therefore, both summands of \eqref{eq:sll1-inequalities} are, in this case,
+    non-negative, so \eqref{eq:sll1-inequalities} is a non-negative upper bound
+    on $z^k$, and thus a valid inequality for $z^k$ also in the case $x_i^k = 0,
+    \forall\is$.
+\end{proof}
+
+It is a remarkable fact that the given family of inequalities is expressive
+enough to contain both sets of constraints over $z^k$ present in \slla. Indeed,
+constraints \eqref{eq:sll1:f}
+\[
+    z^k \leq
+        \sum_{\ell = 1}^{\sigma(k)}  v^\ell v_i^\ell
+        + \sum_{j \in S^k: j \neq i} x_j^k
+    , \quad \forall \kk, \is
+\]
+can be obtained from \eqref{eq:sll1-inequalities} by setting $r_i^k = 0$,
+$
+    r_j^k = \sigma(k), \forall j \in S^k-\{i\}
+$
+and
+$
+    Q_j^k = \varnothing, \forall j \in S^k
+$,
+as the following derivation implies:
+
+\begin{eqnarray*}
+    z^k&\leq& \sum_{j \in S^k} \left(
+            b^{r_j^k}x_j^k
+            + \sum_{\ell = r_j^k + 1}^{\sigma\left(k\right)} \left(b^\ell - b^{r_j^k}\right) v_j^\ell
+            + \sum_{\ell \in Q_j^k} \left(b^\ell - b^{r_j^k}\right) \left(x_j^k + v_j^\ell - 1\right)
+        \right)\\
+       &\iff& z^k \leq
+            b^{r_i^k}x_i^k
+            + \sum_{\ell = r_i^k + 1}^{\sigma\left(k\right)} \left(b^\ell - b^{r_i^k}\right) v_i^\ell
+            + \sum_{\ell \in Q_i^k} \left(b^\ell - b^{r_i^k}\right) \left(x_i^k + v_i^\ell-1\right)\\
+       &    & \quad\quad\quad\quad + \sum_{j \in S^k: j \neq i} \left(
+                b^{r_j^k}x_j^k
+                + \sum_{\ell = r_j^k + 1}^{\sigma\left(k\right)} \left(b^\ell-b^{r_j^k}\right)v_j^\ell
+                + \sum_{\ell \in Q_j^k} \left(b^\ell - b^{r_j^k}\right) \left(x_i^k +v_i^\ell-1\right)
+            \right)\\
+       &\stackrel{\left(r_i^k = 0\right)}{\iff}& z^k \leq
+            \sum_{\ell = r_i^k + 1}^{\sigma\left(k\right)} b^\ell v_i^\ell
+            + \sum_{\ell \in Q_i^k} b^\ell \left(x_i^k + v_i^\ell - 1\right)\\
+       && \quad\quad     
+            + \sum_{j \in S^k: j \neq i} \left(
+                \sum_{\ell = r_j^k + 1}^{\sigma\left(k\right)} \left(b^\ell - b^{r_i^k}\right)v_j^\ell
+                + \sum_{\ell \in Q_j^k} \left(b^\ell - b^{r_i^k}\right)\left(x_i^k + v_i^\ell-1\right)
+            \right)\\
+       &\stackrel{\left(r_j^k = \sigma\left(k\right)\right)}{\iff}& z^k \leq
+            \sum_{\ell = r_i^k + 1}^{\sigma\left(k\right)} b^\ell v_i^\ell
+            + \sum_{\ell \in Q_i^k} b^\ell \left(x_i^k + v_i^\ell - 1\right)
+            + \sum_{j \in S^k: j \neq i} \left(
+                b^\sigma\left(k\right) x_j^k
+                + \sum_{\ell \in Q_j^k} \left(b^\ell-b^{\sigma\left(k\right)}\right) \left(x_i^k + v_i^\ell - 1\right)
+            \right)\\
+       &\stackrel{\left(Q_j^k = \varnothing\right)}{\iff}& z^k \leq
+           \sum_{\ell = 1}^{\sigma\left(k\right)} b^\ell v_i^\ell
+           + b^{\sigma\left(k\right)} \sum_{j \in S^k: j \neq i} x_j^k.
+\end{eqnarray*}
+
+Similarly, inequalities \eqref{eq:sll1:g} can be derived from
+\eqref{eq:sll1-inequalities} by setting $r_i^k = \sigma(k)$ and $Q_i^k =
+\varnothing, \forall\is$, as evidenced by the following derivation:
+
+\begin{eqnarray*}
+    z^k&\leq \sum_{j \in S^k} \left(
+            b^{r_j^k}x_j^k
+            + \sum_{\ell = r_j^k + 1}^{\sigma\left(k\right)} \left(b^\ell - b^{r_j^k}\right) v_j^\ell
+            + \sum_{\ell \in Q_j^k} \left(b^\ell - b^{r_j^k}\right) \left(x_j^k + v_j^\ell - 1\right)
+        \right)\\
+       &\stackrel{\left(r_i^k = \sigma\left(k\right)\right)}{\iff} z^k \leq
+           \sum_\is \left(
+               b^{\sigma\left(k\right)} x_i^k
+               + \sum_{\ell \in Q_i^k} \left(b^\ell - b^{r_i^k}\right)\left(x_i^k + v_i^\ell-1\right)
+           \right)\\
+       &\stackrel{\left(Q_i^k = \varnothing\right)}{\iff} z^k \leq
+           b^{\sigma\left(k\right)} \sum_\is x_i^k
+\end{eqnarray*}

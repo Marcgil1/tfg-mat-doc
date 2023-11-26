@@ -1,0 +1,208 @@
+\section{Second single level linear formulation} % ----------------------------
+\label{sec:las:sll2}
+
+\subsection{Formulation} % .....................................................
+\label{ssc:las:sll2:formulation}
+
+The set of variables presented in the last section can be modified in order to
+reach an alternative formulation. The idea of dividing the total benefit as the
+sum of partial benefits remains intact. However, the degree of granularity in
+the election of variables may be increased. Concretely, for each client $\kk$
+and product $\is$ variable $z_i^k$ will be defined as the benefits obtained from
+the acquisition of $i$ by $k$ if this acquisition takes place, and as zero if
+$k$ does not buy $i$. The objective function will thus be
+\[
+    \max_{v,x,z} \sum_\kk \sum_\is z_i^k.
+\]
+
+\noindent
+Note that
+$
+    z^k = \sum_\is z_i^k, \forall\kk
+$.
+The restrictions to add will be
+{
+    \newcommand{\suml}    {\sum_{\ell=1}^{\sigma(k)}}
+
+    \begin{eqnarray}
+        z_i^k\leq \suml b^\ell v_i^\ell,&\forall\kk,\is \label{eq:sll2-prev:a}\\
+        z_i^k\leq b^{\sigma(k)} x_i^k,  &\forall\kk,\is \label{eq:sll2-prev:b}\\
+        z_i^k\geq 0,                    &\forall\kk,\is.\label{eq:sll2-prev:c}
+    \end{eqnarray}
+}
+
+That for any $\kk$ and $\is$ these restrictions conform to the definition of
+$z_i^k$ given above is justified by the following case analysis:
+\begin{itemize}
+    
+    \item % k sí compra i
+        If $k$ buys $i$, then \eqref{eq:sll2-prev:b} is redundant:
+        $
+            z_i^k \leq b^{\sigma(k)}x_i^k = b^{\sigma(k)}
+        $
+	and \eqref{eq:sll2-prev:a} gives the price of the $i$'th product:
+        {
+            \newcommand{\suml}    {\sum_{\ell=1}^{\sigma(k)}}
+            $
+                z_i^k \leq \suml b^\ell v_i^\ell.
+            $
+        }
+    \item % k no compra i
+	If $k$ does not buy $i$, then \eqref{eq:sll2-prev:b} takes the form
+        $
+            z_i^k \leq b^{\sigma(k)}x_i^k = 0
+        $
+        and \eqref{eq:sll2-prev:a} is redundant:
+        {
+            \newcommand{\suml}    {\sum_{\ell=1}^{\sigma(k)}}
+            $
+                z_i^k \leq \suml b^\ell v_i^\ell.
+            $
+        }
+    
+\end{itemize}
+
+The addition of this set of variables to \slnl gives then rise to the following
+formulation, which we will refer to as \sllb,
+
+{
+    \newcommand{\bover}   {\overline{B(k, i)}}
+    \newcommand{\bne}     {\bover\neq\varnothing}
+    \newcommand{\sumk}    {\sum_{\kk}}
+    \newcommand{\sumi}    {\sum_{\is}}
+    \newcommand{\sumlm}   {\sum_{\ell=1}^{M}}
+    \newcommand{\sumj}    {\sum_{j\in\bover}}
+    \newcommand{\sumls}   {\sum_{\ell=1}^{\sigma(k)}}
+    \newcommand{\sumlsm}  {\sum_{\ell=\sigma(k)+1}^{M}}
+    
+    \begin{eqnarray}
+        &\max_{v, x, z}
+            & \sumk\sumi z^k                                           \label{eq:sll2:a}\\
+        &\text{s.t.}
+            & \sumi  x_i^k                  \leq 1, \quad\forall\kk    \label{eq:sll2:b}\\
+        &   & \sumlm v_i^\ell               \leq 1, \quad\forall\ii    \label{eq:sll2:c}\\
+        &   & \sumj x_j^k + \sumls v_i^\ell \leq 1, \quad\forall\kk,\is:\bne
+                                                                       \label{eq:sll2:d}\\
+        &   & x_i^k + \sumlsm v_i^\ell      \leq 1, \quad\forall\kk,\is\label{eq:sll2:e}\\
+        &   & z^k \leq \sumls b^\ell v_i^\ell,      \quad\forall\kk,\is\label{eq:sll2:f}\\
+        &   & z^k \leq b^{\sigma(k)} x_i^k,         \quad\forall\kk,\is\label{eq:sll2:g}\\
+        &   & v_i^\ell, x_i^k \in \binset, z^k\geq 0\quad\forall\kk,\is,\lm
+                                                                       \label{eq:sll2:h}
+    \end{eqnarray}
+}
+
+\subsection{Inequalities} % ....................................................
+\label{ssc:las:sll2:inequalities}
+
+In a similar manner to formulation \slla, the families \eqref{eq:sll2:f} and
+\eqref{eq:sll2:g} from \sllb lead to poor linear relaxations. In order to
+alleviate this issue, the authors of \cite{ca:rpp} defined the following family
+of valid inequalities:
+
+\begin{proposition}
+    For any customer $\kk$, product $\is$, integer
+    $r_i^k\in\{0,\ldots,\sigma(k)\}$ and subset $Q_i^k\subseteq\{1, \ldots,
+    r_i^k-1\}$, the following is a valid inequality for formulation \sllb:
+
+    \begin{equation}
+        z^k \leq
+            b^{r_i^k}x_i^k
+            + \sum_{\ell=r_i^k+1}^{\sigma(k)}
+                \left(b^\ell - b^{r_i^k}\right) v_i^\ell
+            + \sum_{\ell\in Q_i^k}
+                \left(b^\ell - b^{r_i^k}\right)\left(x_i^k+v_i^\ell-1\right).
+        \label{eq:sll2-inequalities}
+    \end{equation}
+\end{proposition}
+
+\begin{proof}
+    As in the case of the family of inequations \eqref{eq:sll1-inequalities},
+    the validity of \eqref{eq:sll2-inequalities} can be proved by a case
+    analysis on $x_i^k$. If $x_i^k = 1$, then $v_i^{\ell_0} = 1$ for some
+    $\ell_0 \leq \sigma(k)$, $i$ must have had an assigned price within $k$'s
+    budget. We will consider two cases for $\ell_0$:
+    \begin{enumerate}
+        
+        \item % \ell_0 \leq r_i^k
+	    If $\ell_0 \leq r_i^k$, then $v_i^\ell = 0$ for all $\ell > r_i^k$,
+	    so
+	    $
+	        \sum_{\ell = r_i^k + 1}^{\sigma(k)}
+	            \left(b^\ell - b^{r_i^k}\right)v_i^\ell
+	        = 0
+	    $,
+	    and the right-hand side results
+	    \begin{equation}
+	        b^{r_i^k}
+	        + \sum_{\ell \in Q_i^k}
+	            \left(b^\ell - b^{r_i^k}\right) v_i^\ell.
+	        \label{eq:sll2-inequalities:aux}
+	    \end{equation}
+	    If $\ell_0 \in Q_i^k$, then \eqref{eq:sll2-inequalities:aux} is
+	    equal to
+	    $
+	        b^{r_i^k} + b^{\ell_0} - r^{r_i^k} = b^{\ell_0}
+	    $,
+	    which leads to the trivially true condition $z^k \leq b^{\ell_0}$.
+	    If $\ell_0 \not\in Q_i^k$, then \eqref{eq:sll2-inequalities:aux}
+	    equals $b^{r_i^k}$, which is greater than $\ell_0$ due to the
+	    relation $\ell_0 \leq r_i^k$, and the inequality is again true.
+        \item % \ell_0 >    r_i^k
+            If $\ell_0 > r_i^k$, then $v_i^\ell = 0$ for all
+            $
+                \ell \in Q_i^k \subseteq \{ 1, \ldots, r_i^k - 1 \}
+            $
+            and the right-hand side results
+            \[
+                b^{r_i^k} + b^{\ell_0} - b^{r_i^k} = b^{\ell_0}.
+            \]
+
+    \end{enumerate}
+    In any case, if $x_i=0$, the right-hand side of \eqref{eq:sll2-inequalities}
+    is greater than or equal to the upper bound of $z_i^k$, $b^{\ell_0}$. If, on
+    the other side, $x_i^k = 0$, the last argument used in the proof of the
+    validity of \ref{eq:sll1-inequalities:aux} is usable, and implies that the
+    right-hand side of \eqref{eq:sll2-inequalities} is non-negative. Since in
+    this case $z_i^k \leq 0$ is a valid upper bound, the non-negativity of
+    \eqref{eq:sll2-inequalities}'s right-hand side implies again that
+    \eqref{eq:sll2-inequalities} is a valid inequality.
+\end{proof}
+
+As in Section \ref{ssc:las:sll1:inequalities}, the inequation family defined in
+the last result is expressive enough as to contain both restriction sets for
+$z_i^k$ on \sllb. Indeed, if $\kk$ and $\is$, then taking $r_i^k = 0$ and $Q_i^k
+= \varnothing$, \eqref{eq:sll2-inequalities} takes the form of
+\eqref{eq:sll2:f}:
+\begin{eqnarray*}
+    z^k&\leq&
+        b^{r_i^k}x_i^k
+        + \sum_{\ell=r_i^k+}^{\sigma(k)}
+            \left(b^\ell - b^{r_i^k}\right) v_i^\ell
+        + \sum_{\ell\in Q_i^k}
+            \left(b^\ell - b^{r_i^k}\right) \left(x_i^k+v_i^\ell-1\right)\\
+       &\stackrel{(Q_i^k = \varnothing)}{\iff}& z_i^k \leq
+           b^{r_i^k} x_i^k
+           + \sum_{\ell = r_i^k + 1}^{\sigma(k)}
+               \left(b^\ell - b^{r_i^k}\right)v_i^\ell\\
+       &\stackrel{(r_i^k = 0)}{\iff}& z_i^k \leq
+           \sum_{\ell = 1}^{\sigma(k)}
+               b^\ell v_i^\ell
+\end{eqnarray*}
+
+In a similar manner, if $\kk$ and $\is$, we may take $r_i^k = \sigma(k)$ and
+$Q_i^k = \varnothing$ in order to transform \eqref{eq:sll2-inequalities} into
+\eqref{eq:sll2:g}:
+\begin{eqnarray*}
+    z^k&\leq&
+        b^{r_i^k}x_i^k
+        + \sum_{\ell=r_i^k+}^{\sigma(k)}
+            \left(b^\ell - b^{r_i^k}\right) v_i^\ell
+        + \sum_{\ell\in Q_i^k}
+            \left(b^\ell - b^{r_i^k}\right) \left(x_i^k+v_i^\ell-1\right)\\
+       &\stackrel{(Q_i^k = \varnothing)}{\iff}& z_i^k \leq
+           b^{r_i^k} x_i^k
+           + \sum_{\ell = r_i^k + 1}^{\sigma(k)}
+               \left(b^\ell - b^{r_i^k}\right) v_i^\ell\\
+       &\stackrel{(r_i^k = \sigma(k))}{\iff}& z_i^k \leq
+           b^{\sigma(k)} x_i^k
+\end{eqnarray*}

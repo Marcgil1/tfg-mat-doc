@@ -1,0 +1,30 @@
+\section{Motivation and chapter structure} % -----------------------------------
+\label{sec:las:motivation}
+
+We have already said in the introduction that, despite being a highly expressive
+paradigm that allows solving a wide variety of problems, integer programming is
+computationally expensive. Thus, two formulations for the very same problem may
+give rise to completely different solving times. This was the reason for
+abandoning formulation \bnlv, which had a conceptually simple structure
+explicitly reflecting the two agents (seller and client) involved in the \rpp,
+in favour of \slnl, which was computationally simpler due to being a
+single-level formulation. This chapter's objective is to continue presenting
+results in this line, following \cite{ca:rpp}, deriving from \slnl two further
+formulations dealing with its main caveat: non-linearity.
+
+Being all restrictions in \slnl linear inequalities, the only element
+introducing non-linearity is the objective function \eqref{eq:slnl:a}, in which
+$x_i^k$ variables get multiplied with $v_i^\ell$. This is thus the element to
+improve; improvement done by defining a new set of variables allowing a linear
+expression for the cost function. Two such sets of variables will be presented
+in subsections \ref{ssc:las:sll1:formulation} and
+\ref{ssc:las:sll2:formulation}, each one leading to a different formulation.
+
+The new linear formulations will still leave room for improvement, their
+restrictions being too weak. The next results will thus be two families of valid
+restrictions \eqref{ssc:las:sll1:inequalities} and
+\eqref{ssc:las:sll2:inequalities}, which will be, however, too large to be
+directly added to the formulations. Thus, in Section \ref{sec:las:separation},
+an algorithm will be presented for dynamically adding them to the formulation
+during the problem's resolution, following the branch-and-cut schema outlined in
+the introductory chapter.

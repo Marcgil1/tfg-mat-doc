@@ -1,0 +1,904 @@
+\chapter{Introduction}
+\label{chp:introduction}
+
+\pagestyle{headings}
+
+This chapter will present the theoretical foundations and mathematical
+prerequisites of the present work. It consists of five sections: Section
+\ref{sec:int:linear-programming} introduces linear programming and duality
+theory. Even though the formulations considered will mostly contain integer
+variables, an understanding of linear programming is a necessary prerequisite to
+follow our discussion. Section \ref{sec:int:integer-programming} presents
+integer programming, its resolution methods, and several practical matters,
+mainly considerations in computational complexity and restriction reinforcement.
+Section \ref{sec:int:bilevel-programming} presents bilevel programming, an
+optimisation paradigm which will allow for the natural derivation of a
+formulation in Chapter \ref{chp:problem-formulations}.  Section
+\ref{sec:int:rpp} presents the Rank Pricing Problem, the theme of this work.
+Finally, Section \ref{sec:int:graph-theory-and-spp} presents the Set Packing
+Problem and some concepts of Graph Theory which will be useful for Chapter
+\ref{chp:spp}.
+
+
+In the first section, we will follow the first chapter of \cite{ba:linear} and
+Dantzig's review of the first years of linear programming
+\cite{da:reminiscences}; in the second section, the first, seventh, and eighth
+chapters of \cite{wo:integer} will be used; in the third section we will follow
+the introduction of \cite{de:foundations}; in the fourth section, the paper
+\cite{ca:rpp}; and, finally, material in Section
+\ref{sec:int:graph-theory-and-spp} is taken from \cite{pa:facial-structure}.
+
+\section{Linear programming} % -------------------------------------------------
+\label{sec:int:linear-programming}
+
+\subsection{Historical introduction} % .........................................
+\label{ssc:int:lp:historical-introduction}
+
+\subsubsection{The origins of linear programming} % .  .  .  .  .  .  .  .  .  .
+
+The initial conception of linear programming is usually credited to George B.
+Dantzig, who discovered it during his work as counsellor for the U.S. Air Force
+in 1947. Several individuals who realised the potential of the area made prior
+independent discoveries, but most of their advances were eventually forgotten.
+The most notorious work was that of Soviet mathematician Leonid Kantorovich in
+1939, which became known in the west in 1959.
+
+Dantzig's discovery was a result of working for the U.S. Military on task
+assignment problems. By 1946 he had developed a model for the problem, but had
+no resolution method. In 1947, he modelled this same problem as a set of linear
+restrictions over a set of real decision variables, alongside a function to be
+maximised subject to those restrictions. The inclusion of an objective function
+was a novel feature, as was the clear distinction of requirements and
+objectives. As Dantzig exemplifies \cite{da:reminiscences}, officers in the U.S.
+Army would state vague objectives, such as \emph{win the war}, or confuse goals
+and means in assertions like \emph{The way to win is to build a great fleet of
+bombers}. Thus, distinguishing both concepts was a conceptually relevant step in
+the road towards developing clear mathematical formulations. In Dantzig's own
+words,
+
+\begin{flushright}
+   \textit{ 
+        The ability to state general objectives and then find optimal policy
+	solutions to practical decision problems of great complexity is a
+	revolutionary development.
+   }
+\end{flushright}
+
+After arriving at this formulation, the question arose as to whether a solution
+method existed. To get possible hints, he resorted to economist Tjalling C.
+Koopmans, of the University of Chicago. Koopmans was unable to provide him with
+hints of any method, but was excited at Dantzig's discoveries, realising their
+value for economic planning. Koopmans played an important role in disseminating
+Linear Programming among young economists, resulting in works honoured with
+several Nobel prizes in Economy. Not having found any existing solving method
+among economists, Dantzig was forced to develop a method of his own. In the
+summer of 1947, he finally arrived at what would become known as the Simplex
+method.
+
+\subsubsection{A note on terminology} % .  .  .  .  .  .  .  .  .  .  .  .  .  .
+
+The term \emph{programming} comes from \emph{program}, which was the term
+employed by the U.S. Military for referring to their plans and schedules for
+training, logical supply, and deployment of combat units. The original internal
+report of Dantzig in the U.S. Air Force was titled \emph{Programming in a linear
+structure}. It was Koopmans who, taking a walk with Danzig in Santa Monica
+Beach, suggested shortening the name to \emph{Linear programming}. Since then,
+the term \emph{programming} has been used interchangeably with
+\emph{optimisation} for referring to various areas of mathematical optimisation,
+like integer optimisation or stochastic optimisation.
+
+The term \emph{Simplex Method} resulted from a discussion of
+Dantzig with Theodore Motzkin, who thought Dantzig's method would be best
+geometrically described as a series of movements among neighbouring simplices in
+the feasible region. Finally, even though the term \emph{dual} has ancient roots
+in mathematics, the antonym \emph{primal} was an invention of Dantzig's father,
+Tobias Dantzig, also a mathematician, around 1959.
+
+\subsection{Definition of the general linear programming problem} % ............
+\label{ssc:int:lp:definition}
+
+\subsubsection{Definition} %   .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .
+\label{sss:int:lp:def:definition}
+
+Optimisation is the branch of applied mathematics concerned with maximisation
+and minimisation of functions over some given space. The concrete nature of
+these functions and their domains greatly influences the kind of methods
+applicable to their optimisation. In this section, we will consider the case of
+optimising a linear function over a convex polyhedron in $\R^n$ implicitly
+defined by the inequalities associated to its outer faces. More concretely, we
+give the following definition:
+
+\begin{definition}[Linear programming problem]
+    \label{def:lineaer-programming-problem}
+    
+    By \emph{linear problem} or \emph{linear programming formulation}, we mean
+    the problem of maximising some linear function,
+    $
+        \sum_i c_i x_i
+    $,
+    with $c_i \in \R$, over the set of all $x \in \R^n$ with non negative
+    components and satisfying some set of linear inequalities, called
+    \emph{constraints}.  Specifically, if
+    $
+        (a_{ij})_{1 \leq i \leq n\\1 \leq j \leq m}
+    $,
+    is a matrix of real numbers and $b \in \R^m$, then the following is a linear
+    programming problem:
+    
+    \begin{equation*}
+        \begin{array}{cccccccccc}
+            \min_x
+                & c_1 x_1    &+& c_2 x_2    &+& \cdots &+&  c_n x_n   &    & ~       \\
+            \text{s.t.}
+                & a_{11} x_1 &+& a_{12} x_2 &+& \cdots &+& a_{1n} x_n &\leq& b_1     \\
+                & a_{21} x_1 &+& a_{22} x_2 &+& \cdots &+& a_{2n} x_n &\leq& b_2     \\
+                & \vdots     & & \vdots     & &        & & \vdots     &      & \vdots\\
+                & a_{m1} x_1 &+& a_{m2} x_2 &+& \cdots &+& a_{mn} x_n &\leq& b_m     \\
+                &        x_1,& &        x_2,& & \ldots,& &        x_n &\geq& 0.
+        \end{array}
+    \end{equation*}
+
+    Variables $x_i$ are called \emph{decision variables}, matrix $A = (a_{ij})$
+    is the \emph{constraint matrix}, the $c_i$ are the \emph{cost coefficients},
+    and $z = \sum_i c_i x_i$ is the objective function. Finally, the set of
+    points $x \in \R^n$ satisfying all restrictions is called the \emph{feasible
+    set}.
+
+    We can also express a linear problem in the following short form:
+    $
+        \max\{
+            cx~|~Ax \leq b, x \geq \vec{0}
+        \}
+    $.
+    The term \emph{continuous linear problem} may be used to distinguish this
+    kind of problem from the integer linear problems presented in Section
+    \ref{sec:int:integer-programming}.
+\end{definition}
+
+Frequently, we will use the phrase \emph{formulate a problem} for talking about
+the process of finding a suitable formulation for a given real-world problem.
+Albeit we will henceforth only consider maximisation problems, equivalent results
+may be obtained for minimisation problems by making minor adjustments to our
+discourse.  The key for changing between minimisation and maximisation problems
+is realising that the minimum of $\sum_i c_i x_i$ equals minus the maximum of
+$\sum_i -c_i x_i$. This very insight of multiplying by -1 allows us to use
+$\geq$ inequalities in linear formulations, for
+$
+    \sum_i a_{ij} x_i \geq b_j \iff \sum_i -a_{ij} x_i \leq -b_j
+$.
+Equality restrictions may now be introduced, being equivalent to the inclusion
+of two reverse inequalities.
+
+Efficient methods exist for solving the general linear programming problem, the
+first discovered one being the Simplex Method. Being acquainted with the inner
+workings of these algorithms is not a prerequisite for this work. However, we
+direct the interested reader to the comprehensive introduction to the Simplex
+method given in the first five chapters of \cite{ba:linear}.
+
+\subsection{Duality theory} % .................................................
+\label{ssc:int:lp:duality-theory}
+
+A remarkable fact of linear programming is that any linear problem has an
+associated \emph{dual} problem. Solving this dual problem gives us then the
+solution to our original problem. Furthermore, we may use this dual formulation
+so as to obtain useful information regarding our original problem. We will call
+our original problem \emph{primal}. If the primal is of the form
+
+\begin{eqnarray*}
+    \rm{(P)} & \min
+        & cx\\
+    &\text{s.t.}
+        & Ax \geq b\\
+    &   &  x \geq \vec{0},
+\end{eqnarray*}
+
+\noindent
+then we define its dual as
+
+\begin{eqnarray*}\label{eq:dual}
+    \rm{(D)} & \max
+        & ub\\
+    &\text{s.t.}
+        & uA \leq c\\
+    &   & u  \geq \vec{0}.
+\end{eqnarray*}
+
+Please note that the dual has as many variables as the primal has restrictions,
+and vice versa. Also, cost vector and restriction vector exchange their places.
+Through the introduction of the appropriate modifications, any formulation may
+be taken into the form (P). Therefore, we may transform a general linear problem
+to the standard form (P) and then apply the transform from (P) to (D) to obtain
+a dual for the original problem. The following result partly justifies the use
+of the term \emph{dual}:
+
+\begin{proposition}
+    \label{pro:dual-of-dual}
+    
+    The dual of a dual problem is the original primal problem.
+\end{proposition}
+
+\noindent
+As stated, duality allows us to derive a wealth of useful results for solving
+linear problems. We will present, in particular, a result characterising the
+optimal solutions of a problem and its dual which will be used in Subsection
+\ref{ssc:pf:bf:bnl}. This result has been adapted from \cite{si:opt}, theorems
+4.2.4 and 4.2.5.
+
+\begin{proposition}
+    \label{pro:strong-duality-theorem}
+    
+    A primal problem has an optimal solution iff its dual problem does. In this
+    case, feasible solutions $x$ and $u$ for primal and dual are optimal iff $cx
+    = ub$.
+\end{proposition}
+
+The direct implication is known as the \emph{strong duality theorem}. In
+particular, we obtain the following result for problems of the form (P):
+
+\begin{corollary}
+    \label{cor:characterisation-of-solutions}
+    
+    $x$ and $u$ are optimal solutions for problems $\rm{(P)}$ and $\rm{(D)}$,
+    respectively, iff
+    \begin{eqnarray*}
+        cx &   =& ub     \\
+        Ax &\leq& b      \\
+        uA &\leq& c      \\
+        x  &\geq& \vec{0}\\
+        u  &\geq& \vec{0}
+    \end{eqnarray*}
+\end{corollary}
+
+\section{Integer programming} % ------------------------------------------------
+\label{sec:int:integer-programming}
+
+\subsection{Definition} %   .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .
+
+Recall we defined a linear programming problem as being of the form
+$
+    \min\{
+        cx~|~Ax \leq b, x \geq \vec{0}
+    \}
+$.
+If we also add the requirement that some of its variables be integer, we get an
+integer programming problem. The following definitions will make this more
+precise, and introduce some terminology for distinguishing between integer
+problems.
+
+\begin{definition}[Integer formulation]
+    \label{def:integer-formulation}
+    
+    By a \emph{(linear) integer problem}, we mean a linear problem with the
+    added restriction that all of its variables be integers. Symbolically, these
+    problems take the form
+    \begin{eqnarray*}
+        &\min_x     & cx             \\
+        &\text{s.t.}& Ax \leq b      \\
+        &           &  x \geq \vec{0}\\
+        &           &  x \in \Z.     \\
+    \end{eqnarray*}
+\end{definition}
+
+\begin{definition}[Mixed integer formulation]
+    \label{def:mixed-integer-formulation}
+    
+    By a \emph{mixed integer problem}, we mean a linear problem with the added
+    restriction that some of its variables be integers. Symbolically, these
+    problems take the form
+    \begin{eqnarray*}
+        &\min_x     & cx + dy             \\
+        &\text{s.t.}& Ax + By \leq b      \\
+        &           &  x,   y \geq \vec{0}\\
+        &           &  x \in \Z.          \\
+    \end{eqnarray*}
+\end{definition}
+
+\begin{definition}[Binary integer formulation]
+    \label{def:binary-integer-formulation}
+    
+    By a \emph{mixed integer problem}, we mean a linear problem with the added
+    restriction that all of its variables take the values 0 or 1. Symbolically,
+    these problems take the form
+    \begin{eqnarray*}
+        &\min_x     & cx               \\
+        &\text{s.t.}& Ax \leq b        \\
+        &           &  x \in \binset^n.\\
+    \end{eqnarray*}
+    
+\end{definition}
+
+\subsection{Computational complexity} % .  .  .  .  .  .  .  .  .  .  .  .  .
+
+Even though integer programs look formally very similar to continuous linear
+programs, their resolution is computationally much more complicated.
+Intuitively, one might argue that a good heuristic might be to eliminate the
+integrity constraints, solve the resulting linear problem, and then round up
+the result. However, this naive procedure leads to very poor approximations. As
+an example, consider the following integer problem taken from \cite{wo:integer}:
+
+\begin{equation*}
+    \begin{array}{crcrcr}
+        \max & 1.00 x_1 &+& 0.64 x_2           \\
+        \text{s.t.}
+             &   50 x_1 &+&   31 x_2 &\leq& 250\\
+             &    3 x_1 &-&    2 x_2 &\geq&  -4\\
+             &      x_1,& &      x_2 &\geq&   0\\
+             &      x_1,& &      x_2 &\in &  \Z.
+    \end{array}
+\end{equation*}
+
+\begin{figure}
+    \centering
+    
+    \begin{tikzpicture}[scale=0.6]
+        \fill[pattern color=gray, pattern={crosshatch dots}] (0, 0) -- (5.0, 0) -- (1.8585, 4.9222) -- (0, 2) -- (0, 0);
+        \path[draw=\fgcol, line width=0.5pt] (0, 0) -- (5.5, 0);
+        \path[draw=\fgcol, line width=0.5pt] (0, 0) -- (0, 5.5);
+
+        \foreach \x in {0,1,2,3,4,5}
+        \foreach \y in {0,1,2,3,4,5}
+        {
+            \filldraw (\x,\y) circle (2.5pt);
+        }
+        
+        \path[draw=\fgcol, line width=0.5pt] (0, 0) -- (5.0, 0) -- (1.8585, 4.9222) -- (0, 2) -- (0, 0);
+        
+        \node at (-0.4, -0.4) {0};
+        \foreach \i in {1,2,3,4,5}
+        {
+            \node at (-0.5, \i) {\i};
+            \node at (\i, -0.5) {\i};
+        }
+
+        \node at (1.8585, 5.5) {$(\sfrac{378}{193}, \sfrac{950}{193})$};
+
+
+    \end{tikzpicture}
+    
+    \caption{
+        Comparison of solutions of an integer problem and its linear relaxation
+    }
+    \label{fig:rounding}
+\end{figure}
+
+\noindent
+Its feasible region is drawn in Figure \ref{fig:rounding}, alongside the $\Z^2$
+point cloud. We can see that the linear programming solution $(\sfrac{376}{193},
+\sfrac{950}{193})$ lies quite far from the solution to the integer problem, $(5,
+0)$. However discouraging Figure \ref{fig:rounding} may be, it suggests a
+concept of great relevance in the resolution of integer problems:
+
+\begin{definition}[Linear relaxation]
+    \label{def:linear-relaxation}
+    
+    The \emph{linear relaxation} of integer problem 
+    $
+        \min\{
+            cx \mid Ax \leq b, x \geq \vec{0}, x \in \Z^n
+        \}
+    $
+    is the linear problem
+    $
+        \min\{
+            cx \mid Ax \leq b, x \geq \vec{0}
+        \}
+    $.
+\end{definition}
+
+\subsection{Branch and bound} %   .  .  .  .  .  .  .  .  .  .  .  .  .  .  .
+
+The most commonly used method for solving integer linear programming problems is
+\emph{branch and bound}, also called \emph{implicit enumeration}. This method
+searches for a problem's integer solution by dividing its feasible region into
+smaller subregions. The linear relaxation of the original problem is then solved
+over those subregions, until eventually an integer feasible solution is found.
+Furthermore, the optimal values of the linear relaxations can be compared to the
+objective value of the current best integer solution, thus being able to prune
+the search on those subregions unable to improve the current solution. More
+specifically, for a given integer minimisation problem $\rm{(P)}$, \emph{branch
+and bound} solves $\rm{(P)}$ by building a tree in the following manner
+(adapted from \cite[Algorithm 7.2.1]{si:opt}):
+
+\vspace{20pt}
+\hrule
+
+\newcommand{\pprob}[1]{$\rm{(P}_{#1}\rm{)}$}
+\begin{enumerate}
+    \item \textbf{Initialisation}.
+	First, an initial node \pprob{1} is defined and associated to
+	$\rm{(P)}$'s linear relaxation. This relaxation is then solved, and its
+	solution $\tilde{x}^1$ and objective value $\tilde{z}^1$ are added to
+	node \pprob{1}. Furthermore, we define $z_U = -\infty$ and mark
+	\pprob{1} as \emph{unvisited}.
+    \item \textbf{Main loop}.
+        Then, the following steps are repeated:
+        \begin{enumerate}
+            \item \textbf{Stopping rule}.
+		If there are no more unvisited nodes and there is no current
+		best solution, then the problem is unfeasible. If there are no
+		more unvisited nodes, but there is some current best solution,
+		then that solution is optimal.  Otherwise, continue.
+	    \item \textbf{Node selection}.
+		Select some unvisited node \pprob{k} and mark it as
+		\emph{visited}.
+            \item \textbf{Bounding}.
+		Let $z_L$ be the optimal value of the linear relaxation of
+		\pprob{k}'s father. If $z_L$ is higher than $z_U$, then further
+		studying this node cannot lead to any improvement on $z_U$.
+		Thus, stop considering this node by going back to step 2.a.
+            \item \textbf{Solution}.
+		Determine an optimal solution $\tilde{x}$ and the optimal value
+		$\tilde{z}$ of the linear relaxation of node \pprob{k}. Then,
+		\begin{enumerate}
+    		    \item
+			If \pprob{k} has no optimal solution, or $\tilde{z} \geq
+			z_U$, prune this node by going back to step 2.a.
+		    \item
+			If $\tilde{z} < z_U$ and $\tilde{x}$ is an integer
+			vector, then it is considered our current best solution,
+			and we set $z_U = \tilde{z}$.
+		    \item
+			If $\tilde{z} < z_U$, but $\tilde{x}$ has some
+			non-integer components, then go to step 2.e.
+		\end{enumerate}
+	    \item \textbf{Branching}.
+		Select some non-integer component of $\tilde{x}$, say
+		$\tilde{x}_i$, and define nodes \pprob{k_1} and \pprob{k_2}
+		labelling them with the linear problem of \pprob{k} alongside
+		restriction $x_i \leq \intpart{\tilde{x}_i}$ for \pprob{k_1} and
+		$x_i > \intpart{\tilde{x}_i}$ for \pprob{k_2}.
+        \end{enumerate}
+\end{enumerate}
+
+\hrule
+\vspace{20pt}
+
+Note that some steps were not perfectly defined. Namely, the node selection
+phase of 2.b and the component selection in the branching phase 2.e. These are
+important to tune, for choosing appropriate selection rules may result in much
+faster executions.
+
+\subsection{Branch and cut} %  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .
+
+As we have seen, the efficiency of branch and bound critically depends on the
+quality of the lower and upper bounds it can find for the objective function.
+Therefore, a natural question to ask is whether it would be beneficial to
+improve the formulation corresponding to a node prior to investigating its
+children. If this were done, the children's formulations would be tighter, and
+thus, in principle, have better bounds for their objective functions. This is
+the idea leading to branch and cut, a method extending the base branch and
+bound.
+
+After finding each fractional solution, and prior to expanding a node, we may
+try to obtain an inequality that is fulfilled by each feasible solution, but not
+by this fractional solution. Such an inequality is said to \emph{separate} the
+fractional solution from the feasible set, as the following definitions specify:
+
+\begin{definition}[Valid inequality]
+    \label{def:valid-inequality}
+    
+    An inequality is said to be a valid inequality for a set $X$ if it is
+    satisfied by all elements of $X$.
+\end{definition}
+
+\begin{definition}[Separating inequality]
+    \label{def:separating-inequality}
+    
+    Given a point $x_0$ not in a set $X$, a valid inequality for $X$ is said to
+    separate $x_0$ from $X$ if it is not satisfied by $x_0$.
+\end{definition}
+
+\subsection{Useful results} %  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .
+As already stated, solving a general integer problem may be quite hard. However,
+some special classes of integer problems verify that their solutions are
+precisely those of their linear relaxations. One specially important such class
+is that with \emph{totally unimodular} constraint matrices. The next definition
+specifies which matrices satisfy this property.
+
+\begin{definition}[Total unimodularity]
+    \label{def:total-unimodularity}
+    
+    We say a matrix is \emph{totally unimodular} (TU), if all of its square
+    submatrices have determinant +1, -1 or 0.
+\end{definition}
+
+By \emph{submatrix} of a matrix $A$ we mean here the matrix resulting from
+eliminating from $A$ any number of rows and/or columns. A \emph{square
+submatrix} is then a square matrix thus obtained.
+
+\begin{figure}
+    \centering
+    \begin{tabular}{cc}
+        \(
+            \begin{pmatrix}
+                 1 & -1 & -1 &  0\\
+                -1 &  0 &  0 &  1\\
+                 0 &  1 &  0 & -1\\
+                 0 &  0 &  1 &  0
+            \end{pmatrix}
+        \)
+        \quad
+        &
+        \quad
+        \(
+            \begin{pmatrix}
+                1 & 1 & 0\\
+                0 & 1 & 1\\
+                1 & 0 & 1
+            \end{pmatrix}
+        \)
+    \end{tabular}
+    \caption{The left matrix is totally unimodular; the right one is not}
+    \label{fig:tu-matrices}
+\end{figure}
+
+Since single matrix elements can be regarded as square submatrices of size one,
+totally unimodular matrices must have +1, -1 or 0 for entries. However, this
+simple condition is not a necessary one, as Figure \ref{fig:tu-matrices}
+illustrates. Whereas the left matrix may be checked to be TU, the right one has
+determinant 2, and thus is not TU. We may now present a characterisation of
+total unimodularity which can be found in \cite{ne:opt}, as well as a lemma
+necessary for its proof:
+
+\begin{lemma}
+    \label{lem:tu-lemma}
+    
+    Let $A$ be a totally unimodular matrix, and $b, b', d, d'$ be vectors with
+    integer coordinates. If the set
+    $
+        P(d, d', b, b')
+            = \{ x \in \R^n \mid b \leq Ax \leq b', d \leq x \leq d' \}
+    $
+    is not empty, then its vertices have integer coordinates.
+\end{lemma}
+
+\begin{proposition}
+    \label{pro:tu-characterisation}
+    
+    A matrix $A$ is totally unimodular iff every subset of rows $J$ can be
+    partitioned into two sets $J_1$ and $J_2$ such that
+    \[
+        \left|
+            \sum_{j \in J_1} a_{ij} - \sum_{j \in J_2} a_{ij}
+                \leq 1
+        \right|
+    \]
+    \noindent
+    for all $1 \leq i \leq n$.
+\end{proposition}
+
+\begin{proof}
+    $(\implies)$
+    This implication will be proved through an application of Lemma
+    \ref{lem:tu-lemma}. With this aim, let us consider $J$ as an arbitrary set
+    of columns of $A$, $J \subseteq \{1, \ldots, n\}$. We will define several
+    integral vectors from $J$ and $A$ in the following manner: $z$ is a binary
+    vector defined by $z_j = 1$ iff $j \in J$; $d$ is the zero vector $\vec{0}$;
+    $d' = z$; $g = Az$; and, finally, $b$ and $b'$ are defined by:
+    \begin{equation*}
+        b_i =
+            \begin{cases}
+                \frac{g_i}  {2}, &\mbox{ $g_i$ is even}\\
+                \frac{g_i-1}{2}, &\mbox{ otherwise}
+            \end{cases}, \quad
+        b'_i =
+            \begin{cases}
+                \frac{g_i}  {2}, &\mbox{ $g_i$ is even}\\
+                \frac{g_i+1}{2}, &\mbox{ otherwise}
+            \end{cases}
+    \end{equation*}
+    If we define $P = P(d, d', b, b')$ as in Lemma \ref{lem:tu-lemma}, then $P$
+    is nonempty, for $\frac{z}{2} \in P$. Therefore, Lemma \ref{lem:tu-lemma}
+    allows us to conclude that $P$ has integer vertices. Therefore, we may
+    choose a binary vector $x \in P$ with $x_j = 0$ for all columns $j$ not in
+    $J$, and $x_j \in \binset$ for all other $j$. Furthermore, since $x_j = 0
+    \implies z_j = 0$, it holds that $z_j - 2x_j \in \{+1, -1\}$ for all $j$.
+    Defining $J_1 = \{j \in J \mid z_j - 2x_j = +1\}$ and $J_2 = \{ j \in J \mid
+    z_j - 2x_j = -1\}$, we get
+    \begin{eqnarray*}
+        \sum_{j \in J_1} a_{ij} + \sum_{j \in J_2} a_{ij}
+            &=& \sum_{j \in J} a_{ij}(z_j - 2x_j)\\
+            &=& \sum_{j \in J} a_{ij} z_j - 2 \sum_{j \in J} a_{ij} x_j\\
+            &=& (Az)_i - 2(Ax)_i\\
+            &=& g_i - 2(A_x)_i\\
+            &=& (*)
+    \end{eqnarray*}
+    If $g_i$ is even, $b_i = b'_i = \frac{g_i}{2}$, and therefore $b_i \leq
+    (Ax)_i \leq b'_i$ implies $(*) = 0$. If $g_i$ is odd, the same relation
+    implies $(*) \in \{-1, 0, +1\}$. Therefore,
+    \begin{equation*}
+        \left|
+            \sum_{j \in J_1} a_{ij} - \sum_{j \in J_2} a_{ij}
+        \right|
+        \leq 1
+    \end{equation*}
+    for every row $i$.
+    
+    $(\impliedby)$
+    We will prove by induction in $k$ that every $k \times k$ nonsingular matrix
+    of $A$ has determinant $r \in \{+1, -1\}$. For $k = 1$ the result is
+    trivial. Let us now suppose that every $(k-1)\times(k-1)$ nonsingular
+    submatrix of $A$ has determinant $\pm 1$, let $B$ be a $n \times n$
+    nonsingular submatrix, and let $r = |\det B|$.
+
+    An elementary result from linear algebra assures us that $B^{-1} =
+    \frac{B^*}{r}$, where $B^*$ represents $B$'s adjoint. Then, $B b^*_1 =
+    re_1$. If $J = \{ i \mid b^*_{i1} \neq 0 \}$, $\tilde{J}_1 =\{i \in J \mid
+    b^*_{i1} = 1 \}$ and $\tilde{J}_2 = J - \tilde{J}_1$, then $ b^*_1 = re_1$
+    translates into
+    \[
+        (B b^*_1)_i
+            = \sum_{j \in \tilde{J}_1} b_{ij} - \sum_{j \in \tilde{J}_2} b_{ij}
+            = 0, \quad \forall i \in \{2, \ldots, k\}.
+    \]
+    This implies that, for any $i = 2, \ldots, k$, $J$ holds an even number of
+    $j$ such that $b_{ij} = 0$. Therefore,
+    $
+        \sum_{j \in J_1} b_{ij} - \sum_{j \in J_2} b_{ij}
+    $
+    is even for any partition $\{J_1, J_2\}$ of $J$. However, by hypothesis,
+    there exists a partition $\{J_1, J_2\}$ with
+    \[
+        |\sum_{j \in J_1} b_{ij} - \sum_{j \in J_2} b_{ij}| <= 1.
+    \]
+    Therefore,
+    \[
+        \sum_{j \in J_1} b_{ij} - \sum_{j \in J_2} b_{ij} = 0,
+        \quad \forall i \in \{2, \ldots, k\}
+    \]
+    for this partition. Let us now define
+    $
+        \alpha = |\sum_{j \in J_1} b_{1j} - \sum_{j \in J_2} b_{1j} = 0|.
+    $
+    If $\alpha = 0$, then we could define $y \in \R^k$ by $y_i = 1$ for all $i
+    \in J_1$, $y_i = -1$ for all $i \in J_2$, and $y_i = 0$ for all other $i$.
+    Then, $By = 0$. Since $B$ is nonsingular, $y = 0$, which contradicts $J \neq
+    \varnothing$. Therefore, it must be that $\alpha = 1$, and $By \in \{+e_1,
+    -e_1\}$. Since $B b^*_1 = re_1$,
+    \[
+        B(\pm y) = B(\frac{b^*_1}{r}) \implies \pm y = \frac{b^*_1}{r}.
+    \]
+    Taking into account that $b^*_1$ and $y$ have entries $\{0, +1, -1\}$, it
+    follows that $|r| = 1$, as desired.
+\end{proof}
+
+Finally, we may formally state the main result about totally unimodular
+matrices, which can also be found in \cite{ne:opt}:
+
+\begin{proposition}
+    If $A$ is totally unimodular, $b$ has integer components, and the linear
+    problem
+    $
+        \min\{
+            cx \mid Ax \leq b, x \geq \vec{0}
+        \}
+    $
+    has optimal solutions, then these are integer.
+\end{proposition}
+
+\section{Bilevel programming} % ------------------------------------------------
+\label{sec:int:bilevel-programming}
+
+Bilevel programming was first introduced in 1934 by H. von Stackelberg in
+relation to the modelling of financial markets \cite{sa:marktform}. Within the
+Game Theory literature, von Stackelberg's special case led to the so-called
+\emph{Stackelberg's games}. Thus, this field of optimisation bears witness to
+the fruitful consequences of interaction between mathematics and other sciences.
+
+Although a description of bilevel programming formulations may be given for the
+more general nonlinear optimisation case, we will here restrict ourselves to
+linear integer bilevel formulations. For the general description, please consult
+Dempe's comprehensive monograph on Bilevel Programming \cite{de:foundations}, on
+which this section is based.
+
+A bilevel program is a maximisation problem in two sets of variables, $x$ and
+$y$, and hierarchically divided in two subproblems. For any value of $y$, there
+is an ancillary problem of the form:
+\begin{eqnarray*}
+    &\max_x      & c_{21} y + c_{22} x         \\
+    &\mbox{s.t.} & A_{21} y + A_{22} x \leq b_2\\
+    &            &                   x \geq \vec{0}.
+\end{eqnarray*}
+Here, $c_{21}, c_{22}$ and $b_2$ represent vectors of the appropriate
+dimensions, and $A_{21}$ and $A_{22}$ represent matrices. We will need to
+require for this family of ancillary subproblems to have an unique solution
+$x(y)$ for every $y$.
+Note that, on every particular bilevel formulation, this is a supposition that
+will need to be checked. The master subproblem takes the following form:
+\begin{eqnarray*}
+    &\max_y     & c_{11} y + c_{12} x(y)         \\
+    &\mbox{s.t.}& A_{11} y + A_{12} x(y) \leq b_1\\
+    &           &        y               \geq \vec{0}.
+\end{eqnarray*}
+
+This framework naturally fits situations in which two agents interact, the
+benefits obtained or costs incurred by an agent being determined by choices
+taken by a second agent. In the case of von Stackelberg, these agents were
+decision makers in some market. In our work, the bilevel framework will serve
+for modelling the interaction of a company offering some goods and a set of
+buyers interested in certain subsets of those goods.
+
+\section{Introduction to the Rank Pricing Problem} % ---------------------------
+\label{sec:int:rpp}
+
+\subsection{Definition and notation}
+
+In the Rank Pricing Problem (henceforth, RPP), a company offers a finite set $I$
+of products to a finite set $K$ of customers. Each customer wants to buy one
+product from this set, having some strict preferences among products. More
+specifically, each client $\kk$ wants to buy one element from the subset $S^k
+\subseteq I$. Each $\is$ has an associate preference value $s_i^k$, such that
+$k$ would rather buy a product with the greatest possible preference value.
+Preferences are strict, in the sense that for any $i, j \in S^k$ with $i \neq
+j$, either $s_i^k < s_j^k$ or $s_i^k > s_j^k$ hold, but not $s_i^k = s_j^k$.
+Each client also has an associated budget, so that $k$ can only acquire those
+products with a price below or equal to this budget. We suppose the company has
+an unlimited supply of each product, so that every $\ii$ may be bought by
+multiple clients. The company's problem is then to assign a nonnegative real
+price $p_i$ to each of its products so as to maximise its revenue.
+
+Note that there is a trade off between low and high prices: if the prices are
+very high, the company will get a notable profit from each item, but few
+customers will be able to afford buying any product, and thus few items will be
+sold. On the other hand, if prices are very low, many customers will be able to
+buy some item, but the obtained revenue will be quite meagre. Note also that
+this problem is naturally phrased as two interrelated problems: the company
+wants to maximise its revenues by pricing its products, and customers want to
+buy a maximally preferred product of affordable price. This line of thought
+will be the starting point of Chapter \ref{chp:problem-formulations}.
+
+We will now specify the notation we will use in this work. For a summary of this
+notation, please consult the nomenclature table at the begin of this document.
+$K = \{ 1, \ldots, |K| \}$ will stand for the finite set of customers, and $I =
+\{ 1, \ldots, |I| \}$ for the finite set of offered products. For any $\kk$,
+$S^k \subseteq I$ will be the set of products that $k$ is willing to buy. For
+any $\ii, \kk$, $s_i^k \in I$ will stand for the preference value of product $i$
+by $k$. $B = \{ b^1, \ldots, b^M \}$, with $M \leq |k|$, will be the set of
+possible budgets ordered like $b^1 < b^2 < \cdots < b^M$. Function $\sigma: K
+\to \{1, \ldots, M\}$ will assign to each client the index of its budget. That
+is, the budget of customer $k$ is $b^{\sigma(k)}$. Note that clients $k$ with a
+greater value of $\sigma(k)$ are the richest.
+
+We may assume, without loss of generality, that $S^k \neq \varnothing$ for all
+$\kk$. Otherwise, we could simply remove $k$ from the problem. Similarly, we may
+assume each product $\ii$ is in the preference list of at least one customer.
+Otherwise, it may simply be removed from the problem. We will furthermore define
+$b^0 = 0$, for it will be useful in the following chapters.
+
+\section{Graph Theory and its application to the Set Packing Problem} % --------
+\label{sec:int:graph-theory-and-spp}
+
+\subsection{The Set Packing Problem}
+
+Now must we present some concepts on Graph Theory and Geometry that will be
+needed during our discussion in Chapter \ref{chp:spp}. We will firstly introduce
+one of the most extensively studied integer programming problems:
+
+\begin{definition}[Set Packing Problem]
+    \label{def:spp}
+    
+    If $c \in \R^u$, $c \geq \vec{0}$ is a cost vector, $A$ a $w \times u$
+    binary matrix and $\textbf{1}_w \in \R^w$ a vector of ones, then we may
+    define the Set Packing Problem (SPP) as the binary maximisation problem
+    \begin{eqnarray*}
+        &\max_t
+            & ct\\
+        &   & At \leq \mathbf{1}_w\\
+        &   & t_i \in \binset, \forall 1 \leq i \leq u.
+    \end{eqnarray*}
+\end{definition}
+
+In order to give an interpretation to this formulation, let us consider a set
+$X$ with $u$ elements. We would like to select some elements in this set so that
+$w$ restrictions be fulfilled. Namely, the $i$'th of these restrictions states
+that only one element in a certain subset may be chosen. This subset is defined
+by the binary vector $a_i$, so that at most one element among those with
+positive entries in $a_i$ may be selected. By identifying $A$ with the matrix
+with rows $a_i$ so defined, this set element selection problem corresponds to
+the SPP above defined.
+
+\subsection{Elementary definitions from Graph Theory}
+
+In Chapter \ref{chp:spp}, we will be using some concepts from graph theory.
+These are presented below.
+
+\begin{definition}[Graph]
+    \label{def:graph}
+    
+    We define a \emph{graph}, or, more specifically, an \emph{undirected graph},
+    as a pair of finite sets $G = (V, E)$, where $E$ is a family of 2-element
+    subsets of $V$. $V$ is called the set of \emph{vertices}, or \emph{nodes},
+    of $G$, and $E$ the set of \emph{edges} of $G$. Elements of $E$ are usually
+    represented as $(u, v)$, instead of $\{u, v\}$, where $u, v \in V$. If $(u,
+    v) \in E$, then we say that nodes $u$ and $v$ are \emph{adjacent}.
+\end{definition}
+
+\begin{definition}[Subgraph]
+    \label{def:subgraph}
+    
+    We say that a graph $F = (U, I)$ is a \emph{subgraph} of graph $G = (V, E)$
+    if $U \subseteq V$ and $I \subseteq E$. Furthermore, if $U \neq V$ or $I
+    \neq E$, then we say $F$ is a \emph{proper} subgraph of $G$.
+\end{definition}
+
+\begin{definition}[Complete graph]
+    \label{def:complete-graph}
+    
+    We say that a graph is \emph{complete} if every pair of nodes on it are
+    adjacent.
+\end{definition}
+
+\begin{definition}[Neighbourhood]
+    \label{def:neighbourhood}
+    
+    The neighbourhood of a node in a graph is the set of all nodes adjacent to
+    it.
+\end{definition}
+
+\begin{definition}[Clique]
+    \label{def:clique}
+    
+    A subgraph $G'$ of a graph $G$ is said to be a \emph{clique} if it is
+    complete, and is not a proper subgraph of any other complete subgraph of
+    $G$.
+\end{definition}
+
+\subsection{Application to the SPP}
+
+Finally, our discussion in Chapter \ref{chp:spp} will employ some results
+linking Graph Theory with linear programming problems. Before presenting the
+main theorem linking these two fields, some definitions must be presented.
+
+\begin{definition}[Intersection graph]
+    \label{def:intersection-graph}
+    
+    We define the \emph{intersection graph} of a set packing
+    problem instance
+    $
+        \max_t \{ ct \mid At \leq \textbf{1}_w, t \in \binset^u \}
+    $
+    to be the graph $G = (V, E)$ whose nodes are the problem variables $t_i, 1
+    \leq i \leq u$, and in which nodes $t_i$ and $t_j$ are adjacent iff $a_{ki}
+    = a_{kj} = 1$ for some row $k$ of $A$.
+\end{definition}
+
+That is, any two nodes in the intersection graph are adjacent iff the
+corresponding variables are not allowed to be simultaneously set to 1 in a
+feasible solution of the SPP instance.
+
+\begin{definition}[Incidence vector]
+    \label{def:incidence-vector}
+    
+    If $V' \subseteq V$ is a set of nodes of a graph $G = (V, E)$, then we
+    define its \emph{incidence vector} to be $(t_1, \ldots, t_{|V|})$, where the
+    $t_i$ are binary values with $t_i = 1$ iff the $i$'th node of $G$ belongs to
+    the set $V'$.
+\end{definition}
+
+\begin{definition}[Convex hull]
+    \label{def:convex-hull}
+
+    The convex hull of a set of points in $\R^n$ is the intersection of all
+    convex sets containing that set.
+\end{definition}
+
+\begin{definition}[Facet]
+    \label{def:facet}
+
+    Let $X$ be a subset of $\R^n$ implicitly defined as $At \leq b$, $t \in
+    \R^n$. Then, by \emph{facet} of $X$ we refer to a linear constraint defining
+    an $(n-1)$-dimensional face of the $At \leq b$ polyhedron.
+\end{definition}
+
+Lastly, the prime result over which Chapter \ref{chp:spp}'s study is based is
+the following, first given in \cite{pa:facial-structure}:
+
+\begin{theorem}
+    \label{thm:padberg}
+
+    Let \rm{(S)} be a set packing problem, $G$ its intersection graph, and
+    $P(G)$ the convex hull of all its incidence vectors (that is, the convex
+    hull of its feasible solutions). Then, an inequality $\sum_{j \in J} t_j
+    \leq 1$ is a facet of $P(G)$ iff the variables $t_j,\ j \in J$ form a clique
+    of $G$.
+\end{theorem}

@@ -1,0 +1,180 @@
+\selectlanguage{spanish}
+\pagestyle{plain}
+
+\chapter*{Resumen (Español)} % -------------------------------------------------
+
+El objeto del presente trabajo es el Problema de Asignación de Precios con Rango
+(en inglés, \emph{Rank Pricing Problem}, RPP). Éste es un problema de
+optimización consistente en determinar de qué forma debe un productor asignar
+precios a sus productos de manera que se maximice su beneficio. A continuación,
+presentaremos el RPP y daremos al lector un resumen de la estructura del
+trabajo.
+
+\paragraph*{}
+
+El Problema de Asignación de Precios con Rango supone la existencia de un
+vendedor y de un conjunto de clientes. El vendedor ofrece diversos productos, y
+desea asignar un precio a cada uno de manera que se maximice su beneficio. A su
+vez, cada cliente viene caracterizado por una lista de preferencias. Esta lista
+está conformada por un conjunto de productos de entre los ofertados por el
+vendedor. Los productos de estas listas de preferencias están totalmente
+ordenados, de manera que, para cada par de productos $i_1$ e $i_2$ deseados por
+un cliente $k$, bien $i_1$ es estrictamente mejor que $i_2$ para $k$, bien $i_2$
+es estrictamente mejor que $i_1$ para $k$. Todo cliente tiene además un
+presupuesto, que es el máximo gasto que se puede permitir. Así pues, cada
+cliente desea adquirir exactamente un producto, que sea de máxima preferencia
+para él, pero cuyo precio sea menor o igual que su presupuesto.
+
+El RPP ha sido tratado en profundidad en el artículo \cite{ca:rpp}. Es de esta
+fuente de donde se han extraído la mayor parte de resultados de los capítulos
+segundo, tercero y cuarto. A menos que se indique lo contrario, todo resultado
+se debe entender contenido en el artículo de Calvete y otros.
+
+Este trabajo se encuentra dividido en seis capítulos, cuyos contenidos se
+resumen a continuación.
+
+\paragraph*{}
+
+El desarrollo del trabajo requiere de resultados y definiciones pertenecientes a
+tres áreas diferentes de la optimización: programación lineal, programación
+entera y programación binivel. Éstos se presentan en el primer capítulo.
+
+Un entendimiento de programación lineal es requisito necesario para comprender
+los modelos de programación entera que forman el núcleo de este trabajo. Por
+este motivo se le dedica la primera sección de la introducción. Tras una breve
+reseña histórica de este paradigma, se dan varias de sus definiciones
+elementales. Además, se presentan brevemente varios resultados referidos a
+teoría de la dualidad. Éstos son usados en el segundo capítulo, donde permiten
+derivar una formulación de un solo nivel a partir de las formulaciones binivel
+inicialmente definidas.
+
+La programación entera abarca la segunda sección de la introducción. Este
+paradigma permite definir la mayoría de las formulaciones del trabajo. Se
+presentan pues, varias definiciones elementales, y se analiza su complejidad
+computacional y dos métodos de resolución: ramificación y acotación, y
+ramificación y corte. Además, se introducen varios resultados relacionados con
+matrices totalmente unimodulares que permiten resolver algunos problemas enteros
+como si fueran lineales. Estos resultados serán de interés en el segundo
+capítulo.
+
+Finalmente, la programación binivel abarca la tercera sección de la
+introducción. Esta rama de la optimización estudia la definición de problemas
+con una estructura en dos niveles. En el problema de primer nivel, se desea
+resolver un problema de programación lineal o entera. Además, entre las
+restricciones de este problema de primer nivel se requiere que algunas variables
+sean solución de un problema de segundo nivel. La programación binivel permite
+dar en el segundo capítulo dos formulaciones del Problema de Asignación de
+Precios con una interpretación muy natural de los conceptos de cliente y
+vendedor.
+
+La introducción contiene, además, una introducción al RPP, y una sección
+presentando varios resultados de teoría de grafos. Estos resultados serán la
+base del cuarto capítulo. Su interés se debe a que proporcionan una manera de
+traducir afirmaciones sobre desigualdades válidas para un problema de
+optimización, el problema de empaquetamiento de conjuntos (SPP), en afirmaciones
+sobre subgrafos de un cierto grafo asociado al SPP.
+
+\paragraph*{}
+
+
+El segundo capítulo presenta cuatro formulaciones para el RPP. En primer lugar
+se presentan dos formulaciones binivel en que se asigna al vendedor un problema
+de primer nivel, y a cada uno de los clientes un problema de segundo nivel. Así
+pues, el vendedor elige los precios de los productos maximizando su beneficio,
+mientras que los clientes buscan elegir un producto dentro de su presupuesto con
+\emph{nivel de preferencia} máximo. La elección concreta de variables da lugar a
+dos formulaciones, $\rm{(BNL}^{\textit{p}}\rm{)}$ y
+$\rm{(BNL}^{\textit{v}}\rm{)}$.  $\rm{(BNL}^{\textit{p}}\rm{)}$ nace de
+representar el precio del producto $i$ mediante la variable $p_i$, que es una
+variable real indicando el precio de $i$. La formulación
+$\rm{(BNL}^{\textit{v}}\rm{)}$ se obtiene a partir de
+$\rm{(BNL}^{\textit{p}}\rm{)}$ notando la aplicabilidad de un resultado dado en
+\cite{ru:nonparametric}. Éste asegura que en la solución óptima del RPP los
+precios asignados pertenecen al conjunto de diferentes presupuestos de los
+clientes. Definiendo $B$ como el conjunto de diferentes presupuestos, podemos
+entonces representar el precio del producto $i$ mediante $v_i^\ell$, que es una
+variable binaria indicando si el producto $i$ recibe el precio $\ell \in B$.
+
+Deseando eludir la alta complejidad computacional de las formulaciones binivel,
+se deriva de $\rm{(BNL}^{\textit{v}}\rm{)}$ una formulación de un solo nivel,
+(BNL), fruto de caracterizar las soluciones del problema de segundo nivel
+mediante varias restricciones lineales. A partir de (BNL) se obtiene una segunda
+formulación de un solo nivel (SLNL), que servirá de base al resto del trabajo.
+
+\paragraph*{}
+
+El tercer capítulo parte de la formulación (SLNL) para obtener dos formulaciones
+lineales. El motivo de este cambio vuelve a ser el deseo de resolver el RPP con
+un método de la menor complejidad computacional posible pues, efectivamente, la
+resolución de los problemas no lineales es notoriamente más compleja que la de
+los lineales. El elemento problemático en (SLNL) es su función objetivo, que
+contiene productos de variables. Así pues, la linealización de esta formulación
+se realiza transformando la función objetivo en una función lineal. Se define
+para ello una nueva familia de variables que permiten expresar la función
+objetivo de manera lineal. Además, es necesario incluir varias restricciones que
+permiten dar sentido a las nuevas variables.
+
+La elección concreta de nuevas variables da lugar a dos formulaciones lineales
+distintas: $\rm{(SLL}_1\rm{)}$ y $\rm{(SLL}_2\rm{)}$. Las nuevas variables de la
+primera son $z^k$, el beneficio obtenido por el vendedor del cliente $k$. Las de
+la segunda son más granulares, $z^k_i$, representando el beneficio obtenido por
+el vendedor de vender el producto $i$ al cliente $k$. Nótese que si en la
+solución óptima un cliente $k_0$ no adquiere un producto $i_0$, entonces
+$z_{i_0}^{k_0} = 0$.
+
+También con ánimo de mejorar el tiempo de resolución se definen dos familias de
+desigualdades válidas, una para cada formulación lineal. Éstas resultan tener un
+tamaño exponencial, por lo que se hace necesario estudiarlas minuciosamente y
+dar un algoritmo de separación para cada familia. Estos algoritmos toman como
+entrada la solución fraccionaria de alguna relajación lineal del problema y
+devuelven una restricción de la familia que no sea cumplida por la solución
+fraccional. Tal procedimiento resulta útil para resolver el RPP mediante
+ramificación y corte.
+
+\paragraph*{}
+
+A diferencia de los dos anteriores, el objetivo del cuarto capítulo no es
+mejorar las formulaciones obtenidas, sino determinar cuán buenas son. Se
+comienza notando que varias de las restricciones de las formulaciones
+$\rm{(SLL}_1\rm{)}$ y $\rm{(SLL}_2\rm{)}$ forman lo que se conoce como un
+Problema de Empaquetamiento de Conjuntos (en inglés, \emph{Set Packing Problem},
+SPP). Tal descubrimiento nos permite emplear las técnicas y resultados
+presentados al término del Capítulo \ref{chp:introduction} para determinar
+cuáles de las restricciones de $\rm{(SLL}_1\rm{)}$ y $\rm{(SLL}_2\rm{)}$ son
+facetas para sus subproblemas de empaquetamiento de conjuntos. Para ello
+necesitamos considerar un objeto, llamado grafo intersección $G$, asociado al
+problema de empaquetamiento de conjuntos. Un resultado debido a Padberg
+\cite{pa:facial-structure} nos permite relacionar facetas de SPP con cliqués de
+$G$. Este cambio de lenguaje de problema de empaquetamiento a teoría de grafos
+nos permite concluir que la mayor parte de las restricciones del SPP son facetas
+del mismo, lo que implica que las formulaciones $\rm{(SLL}_1\rm{)}$ y $\rm{(SLL}_2\rm{)}$ no
+admiten una mejora trivial.
+
+\paragraph*{}
+
+Finalmente, el quinto capítulo presenta las contribuciones originales del autor.
+Éstas se resumen en dos: extensión de las formulaciones $\rm{(SLL}_1\rm{)}$ y
+$\rm{(SLL}_2\rm{)}$ al problema CRPP sin envidia y estudio computacional de
+dichas extensiones.
+
+El Problema de Asignación de Precios con Rango y Capacidades (en inglés,
+\emph{Capacitated Rank Pricing Problem}, CRPP) es una extensión del RPP. Las
+adiciones introducidas por CRPP son el permitir definir limitaciones de
+inventario y el permitir a cada cliente tener un presupuesto diferente para cada
+producto. Las limitaciones de inventario permiten modelar situaciones en que no
+se puede producir un bien de manera ilimitada. Por ejemplo, un teatro pude
+ofertar 50 localidades en palco y 200 en la platea, pero ninguna más, por
+limitaciones de espacio. El CRPP tiene dos variantes: con y sin envidia. Se dice
+que una solución presenta envidia si algún cliente $k$ desea adquirir un
+producto $i$ cuyo precio es menor o igual que su presupuesto, pero no puede
+hacerlo porque se han agotado sus existencias. El CRPP con envidia es aquel en
+que se permiten soluciones con envidia. A su vez, CRPP sin envidia se refiere a
+aquel en que no se permiten soluciones que presenten envidia. Nosotros
+presentamos dos formulaciones para el CRPP sin envidia basadas en las
+formulaciones $\rm{(SLL}_1\rm{)}$ y $\rm{(SLL}_2\rm{)}$ antes aludidas.
+
+Por último, el quinto capítulo presenta también un estudio computacional en que
+se estudia la eficiencia de las formulaciones propuestas para el CRPP. Las
+instancias empleadas para este estudio han sido generadas aleatoriamente.
+
+\selectlanguage{english}

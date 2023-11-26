@@ -1,0 +1,558 @@
+\chapter{Polyhedral structure of the set packing subproblem}
+\label{chp:spp}
+
+\section{Introduction} % -------------------------------------------------------
+\label{sec:spp:introduction}
+
+All of the work presented up to this point has been concerned with the
+development of an adequate formulation for the RPP. However, despite all of this
+work, no mention has been made to precisely how good the obtained formulations
+are. However, some precise statements can be made regarding the tightness of
+some restrictions in formulations \slla and \sllb, their presentation being this
+chapter's objective. This will be done noting that a particular set of
+restrictions of these formulations corresponds to a Set Packing Problem (see
+Definition \ref{def:spp}), thus being able to apply to it Padberg's
+characterisation of SPP facets through intersection graphs. For a review of
+these topics, please refer to Section \ref{sec:int:graph-theory-and-spp} in the
+Introduction.
+
+Consider the families of restrictions \eqref{eq:sll1:b} - \eqref{eq:sll1:e} of
+problem \slla, which we will refer to as \emph{set packing subproblem} (SPSP):
+
+{
+    \newcommand{\bover} {\overline{B(k, i)}}
+    \newcommand{\bne}   {\bover\neq\varnothing}
+    \newcommand{\sumi}  {\sum_{\is}}
+    \newcommand{\sumlm} {\sum_{\ell=1}^{M}}
+    \newcommand{\sumj}  {\sum_{j\in\bover}}
+    \newcommand{\sumls} {\sum_{\ell=1}^{\sigma(k)}}
+    \newcommand{\sumlsm}{\sum_{\ell=\sigma(k)+1}^{M}}
+    
+    \begin{eqnarray}
+        \rm{(SPSP)}
+            &    & \sumi  x_i^k                \leq 1, \quad\forall\kk
+                                                            \label{eqn:spsp:a}\\
+            &    & \sumlm v_i^\ell             \leq 1, \quad\forall\ii
+                                                            \label{eqn:spsp:b}\\
+            &    & \sumj x_j^k+\sumls v_i^\ell \leq 1, \quad\forall\kk,\is:\bne
+                                                            \label{eqn:spsp:c}\\
+            &    & x_i^k + \sumlsm v_i^\ell    \leq 1, \quad\forall\kk,\is.
+                                                            \label{eqn:spsp:d}
+    \end{eqnarray}
+}
+
+\noindent
+This terminology is justified by noting that the coefficient matrix of all these
+restrictions has binary entries, and that the right-hand side vector's
+components are all ones, thus corresponding this set of restrictions to the
+feasible region of a Set Packing Problem. Please note that these very
+restrictions can also be found in Formulation \sllb, in constraints
+\eqref{eq:sll2:b} - \eqref{eq:sll2:e}. Thus, by studying (SPSP) we will be able
+to derive conclusions equally applicable to both of these formulations.
+
+However, due to technical details, we will have to add some restrictions to
+(SPSP). These additions were implicitly assumed in \cite{ca:rpp}, but here, we
+will state them explicitly. We will namely add all valid restrictions of the form
+$x_i^k + x_j^{k'} \leq 1$. An explicit enumeration of these will be obtained in
+Point 3 of Proposition \ref{pro:characterisation}.
+
+Let us now represent by $G = (V, E)$ the intersection graph corresponding to
+(SPSP), as described in Definition \ref{def:intersection-graph}, and by $P(G)$ the convex
+hull of all feasible solutions of (SPSP). Since tightness of restrictions has a
+direct influence in the efficiency of resolution, quality of formulations \slla
+and \sllb may be checked by ensuring that many of the inequalities
+\eqref{eqn:spsp:a} - \eqref{eqn:spsp:d} are facets of $P(G)$. This will be
+obtained as conclusion to the main theorems presented in Section
+\ref{sec:spp:facets}.  Introduction of the intersection graph $G$ does not serve
+merely explanatory purposes: it stands at the hearth of theorems
+\ref{thm:xineqs}, \ref{thm:xfacets} and \ref{thm:vineqs}. The point in the
+proofs of these theorems in which $G$ will allow us to make statements about
+facets is a notable theorem due to Padberg \cite{pa:facial-structure}. It is
+therefore necessary to give a precise description of $G$, which will be done in
+next section.
+
+\section{Description of the intersection graph} % ------------------------------
+\label{sec:spp:intersection-graph}
+
+In order to handle the intersection graph $G$, a characterisation of it through
+variables $x$ and $v$ must be obtained, since phrasing any argument in terms of
+(SPSP)'s constraint matrix and its rows would be overly cumbersome. However, as
+will be seen in the proof, these characterisations are almost direct
+translations of the constraint matrix's structure.
+
+\begin{proposition}
+    \label{pro:characterisation}
+
+    If $G$ is the intersection graph associated to \rm{(SPSP)}, then the
+    following statements on $G$'s nodes hold:
+    \begin{enumerate}
+        \item % 1
+	    For any client \kk and distinct products $i \neq j$ in $S^k$, nodes
+	    $x_i^k$ and $x_j^k$ are adjacent.
+	\item % 2
+	    For any pair of distinct clients $k, k' \in K$, $k \neq k'$ and
+	    product \ii, nodes $x_i^k$ and $x_j^{k'}$ are \emph{not} adjacent.
+	\item % 3
+	    For any pairs $k \neq k'$ and $i \neq j$ of distinct clients and
+	    products, adjacency of nodes $x_i^k$ and $x_j^{k'}$ is equivalent to
+	    conditions $\sigma(k) \geq \sigma(k')$ and $j \in B(k, i)$.
+	\item % 4
+	    For any client \kk, product \ii , and price index \lm, adjacency of
+	    nodes $x_i^k$ and $v_i^\ell$ is equivalent to the condition $\ell >
+	    \sigma(k)$.
+	\item % 5
+	    For any client \kk, distinct products $i \neq j$ and price index
+	    \lm, adjacency of nodes $x_i^k$ and $v_j^\ell$ is equivalent to
+	    conditions $\ell \leq \sigma(k)$ and $j \in B(k, i)$.
+	\item % 6
+	    For any product \ii, and distinct price indices $\ell \neq \ell'$,
+	    nodes $v_i^\ell$ and $v_i^{\ell'}$ are adjacent.
+	\item % 7
+	    For any distinct products $i \neq j$ and pair of price indices
+	    $\ell, \ell' \in \{1, \ldots, M\}$, nodes $v_i^\ell$ and
+	    $v_j^{\ell'}$ are \emph{not} adjacent.
+    \end{enumerate}
+\end{proposition}
+
+\begin{proof}
+    This result will be proved by relating each of the assertions with their
+    translation into statements about (SPSP)'s constraint matrix, which we will
+    henceforth refer to as $A$. Please recall that, from the definition of
+    intersection graph (Definition \ref{def:intersection-graph}), two variables
+    are adjacent iff a row of $A$ exists which simultaneously assigns them a
+    coefficient of 1. We will separately prove each statement:
+    \begin{enumerate}
+        \item % 1
+	    For any client $\kk$ and distinct products $i, j \in S^k$, variables
+	    $x_i^k$ and $x_j^k$ appear in the left-hand side of the
+	    \eqref{eqn:spsp:a} restriction associated to $k$. Therefore, $x_i^k$
+	    and $x_j^k$ are adjacent in this case.
+        \item % 2
+	    In this case, variables $x_i^k$ and $x_i^{k'}$ do not simultaneously
+	    appear on the left-hand side of any of (SPSP)'s restrictions. This
+	    corresponds to the fact that knowing that $k$ purchases a product
+	    $i$ does not give any clue on whether $k'$ will buy $i$.
+        \item % 3
+	    If $x_i^k = 1$, that is, if $k$ purchases product $i$, then $k$
+	    cannot afford any product $k$-better than $i$, since otherwise he
+	    would have bought it instead of $i$. Similarly, no client $k'$ with
+	    a tighter budget, $\sigma(k') \leq \sigma(k)$, will be able to
+	    afford it either. Therefore, $x_j^{k'} = 1$, as stated on Point 3.
+	    Conversely, knowing that $k$ does not purchase $i$ provides us with
+	    no information on whether clients $k'$ richer than $i$ will be able
+	    to afford products $\overline{B(k, i)} \cup \{i\}$.
+        \item % 4
+	    The only way $x_i^k$ and $v_i^\ell$ can appear in the same left-hand
+	    side is in inequality family \eqref{eqn:spsp:d}. This happens
+	    precisely when $\ell \geq \sigma(k) + 1$.
+        \item % 5
+	    The only way $x_i^k$ and $v_j^\ell$ can appear in the same
+	    constraint is in constraint family \ref{eqn:spsp:c}, and in this
+	    family this only occurs for $l \leq \sigma(k)$ and $j \in B(k, i)
+	    \iff i \in \overline{B(k, j)}$.
+        \item % 6
+	    It suffices to note that, for any \ii, all the $v_i^\ell$ are added
+	    together in restriction family \eqref{eqn:spsp:b}.
+        \item % 7
+	    In none of the (SPSP) restrictions two $v$ variables with different
+	    $i$ indices get added together. Thus, $v_i^\ell$ and $v_j^{\ell'}$
+	    are never adjacent if $i \neq j$.
+    \end{enumerate}
+\end{proof}
+
+\section{Description of SPP facets} % ------------------------------------------
+\label{sec:spp:facets}
+
+Having introduced last section's result on the structure of the intersection
+graph's structure we may now head on to present this chapter's main results. In
+order to do so, however, we will need to introduce some further nomenclature
+extending the definition of the $B(k, i)$ sets:
+
+\begin{definition}
+    \label{def:better-set}
+
+    If \kk is a customer and $P \subseteq S^k$, then we define
+    $
+        B(k, P) = \{ i \in S^k \mid i >_k j\ \forall j \in P\}
+    $.
+    That is, $B(k, P)$ is the set of products which $k$ prefers over all
+    products in $P$. Similarly, we may define $\overline{B(k, P)}$ to be the set
+    of products which are less preferred by $k$ than any product in $P$. More
+    precisely,
+    $
+        \overline{B(k, P)} = \{ i \in S^k \mid i <_k j\ \forall j \in P\}
+    $.
+    Please note that $\overline{B(k, P)}$ need not be $B(k, P)$'s complement.
+    For instance, products in $P$ do not belong to any of these sets.
+\end{definition}
+
+Furthermore, an auxiliary result must be presented. It is a natural result
+stating that cliques containing some pair $v_i^{\ell_1}$ and $v_i^{\ell_2}$ of
+$v$-variables also contains all $v$-variables with $\ell$ between $\ell_1$ and
+$\ell_2$:
+
+\begin{lemma}
+    \label{lem:price-index-interval}
+
+    Any clique in $G$ containing nodes $v_i^{\ell_1}$ and $v_i^{\ell_2}$ for
+    some product $i$ and price indices $\ell_1 < \ell_2$ also contains all nodes
+    $v_i^\ell$ with $\ell_1 < \ell < \ell_2$.
+\end{lemma}
+
+\begin{proof}
+    Given a clique $G'$ in $G$ containing $v_i^{\ell_1}$ and $v_i^{\ell_2}$, we
+    will prove that if $\ell_1 < \ell < \ell_2$, then $v_i^\ell$ is adjacent to
+    every node in $G'$. Since $G$ contains $x$-nodes and $v$-nodes, we will
+    prove that $v_i^\ell$ is adjacent to nodes in each of these families.
+
+    Firstly, if $v_j^{\ell'} \in G'$, then it is adjacent to $v_i^{\ell_1}$,
+    since $G'$ is a complete subgraph. By parts (6) and (7) of Proposition
+    \ref{pro:characterisation} this means that $i = j$. By these very results,
+    we then get that $v_j^{\ell'}$ is adjacent
+    to $v_i^\ell$.
+
+    Secondly, if $x_i^k \in G'$, then it is adjacent to $v_i^{\ell_1}$, since
+    $G'$ is a complete subgraph. Thus, by Proposition \ref{pro:characterisation}
+    part (4), it must be the case that $\sigma(k) < \ell_1$. This very result
+    asserts then that $\sigma(k) < \ell_1 < \ell$ implies $x_i^k$ is adjacent to
+    $v_i^\ell$.
+
+    Lastly, if $x_j^k \in G'$ for some $j \neq i$, then it is adjacent to
+    $v_i^{\ell_2}$, since $G'$ is a complete subgraph. Thus, by Proposition
+    \ref{pro:characterisation} part 5, $j \in B(k, i) \iff i \in \overline{B(k,
+    j)}$ and $\sigma(k) \geq \ell_2$. Therefore, since $\ell < \ell_2 \leq
+    \sigma(k)$, that same result implies that $x_j^k$ is adjacent to $v_i^\ell$,
+    thus ending the proof.
+\end{proof}
+
+It is now possible for us to introduce the main results in this section. These
+are \ref{thm:xineqs} and \ref{thm:xfacets}, relating to $x$-variables and
+\ref{thm:vineqs} relating to $v$-variables. For each set of variables, they
+present valid families of restrictions and conditions over these families for
+their restrictions to be facet-defining. The importance of these four results
+will become clear at the end of the section, when we discuss their implications
+for formulations \slla and \sllb.
+
+\begin{theorem}
+    \label{thm:xineqs}
+
+    For any set of customers $\{k_2, \ldots, k_n\}$ with $n \geq 2$ and ordered
+    non-decreasingly by purchase power, $\sigma(k_2) \leq \cdots \leq
+    \sigma(k_n)$, and for any non empty and pairwise disjoint sets $P^{k_q}
+    \subseteq S^{k_q}$, $q \in \{2, \ldots, n\}$ such that
+    \begin{equation*}
+        P^{k_q} \subseteq
+                \left(
+                    \bigcap_{r=2:\\ \sigma(k_r) < \sigma(k_q)}^{q-1}
+                        \overline{B(k_q, P^{k_r})}
+                \right)
+            \bigcap
+                \left(
+                    \bigcap_{r=2:\\ \sigma(k_r) = \sigma(k_q)}^{q-1}
+                        \left(
+                            \overline{B(k_q, P^{k_r})} \cup B(k_r, P^{k_r})
+                        \right)
+                \right)
+    \end{equation*}
+    \noindent
+    for all $q \in \{3, \ldots, n\}$, the following are valid restrictions for
+    formulations \slla and \sllb:
+    \begin{equation}
+        \label{eqn:xineqs}
+        \sum_{q=2}^n \sum_{j \in P^{k_q}} x_j^{k_q} \leq 1.
+    \end{equation}
+\end{theorem}
+
+\begin{proof}
+    Let us denote by $G = (V, E)$ the intersection graph of the set packing
+    subproblem, and let $Q = (V', E')$ be a clique of $G$ containing only $x$
+    variables. Choose $k_2$, a client with minimum budget in the clique, and
+    $P^{k_2} \subseteq S^{k_2}$ such that $x_j^{k_2} \in V'$ for all $j \in
+    P^{k_2}$.
+
+    Let us consider other customers $k_q$, $q = 3, \ldots, n$ ordered such that
+    $\sigma(k_2) \leq \cdots \leq \sigma(k_n)$, and alongside nonempty sets of
+    products $P^{k_q} \subseteq S^{k_q}$ such that $x_j^{k_q} \in V'$, $\forall
+    j \in P^{k_q}, q = 3, \ldots, n$. Then, by the second point of Proposition
+    \ref{pro:characterisation}, the $P^{k_2}, \ldots, P^{k_n}$ are pairwise
+    disjoint. Furthermore, they verify the following two inclusions:
+    \begin{enumerate}
+        \item % 1
+            \[
+                P^{k_q} \subseteq
+                    \bigcap_{r=2 \mid \sigma(k_r) < \sigma(k_q)}^{q-1}
+                        \overline{B(k_q, P^{k_r})}
+                , \quad \forall q = 3, \ldots, n
+            \]
+	    If this relation didn't hold, there would exist some $k_r$ with
+	    $\sigma(k_r) < \sigma(k_q)$ and products $i \in P^{k_r}$ and $j \in
+	    P^{k_q}$ with $x_i^{k_r}, x_j^{k_q} \in V'$ and $j \notin
+	    \overline{B(k_q, i)}$. However, this is absurd, because the third
+	    point of Proposition \ref{pro:characterisation} would then imply
+	    that $x_i^{k_r}$ and $x_j^{k_q}$ would not be neighbours in $G$,
+	    contradicting that $V'$ is a complete subgraph of $G$.
+        \item % 2
+            \[
+                P^{k_q} \subseteq
+                    \bigcap_{r=2 \mid \sigma(k_r) < \sigma(k_q)}^{q-1}
+                        \left(
+                                \overline{B(k_q, P^{k_r})}
+                            \cup
+                                B(k_r, P^{k_r})
+                        \right)
+                , \quad \forall q = 3, \ldots, n
+            \]
+	    If this were not the case, there would exist some $k_r$ with
+	    $\sigma(k_r) = \sigma(k_q)$ and products $i \in P^{k_r}$ and $j \in
+	    P^{k_q}$ such that $x_i^{k_r}, x_j^{k_q} \in V'$. However, the third
+	    point of Proposition \ref{pro:characterisation} implies that
+	    $x_i^{k_r}$ and $x_j^{k_j}$ are not neighbours in $G$. As before,
+	    this is absurd, since it contradicts that $V$ is a complete graph.
+    \end{enumerate}
+
+    In summary, these restrictions ensure that the $x$ variables appearing in a
+    sum of the type \ref{eqn:xineqs} give rise to a complete subgraph $V'$,
+    which implies that inequalities of family \ref{eqn:xineqs} are valid
+    constraints for the set packing subproblem.
+\end{proof}
+
+\begin{theorem}
+    \label{thm:xfacets}
+    Inequalities of the family \eqref{eqn:xineqs} are facets of \rm{(SPSP)} iff
+    \begin{enumerate}
+        \item
+            There does not exist any client $k_0 \in K$ and client $i_0 \in S^k$
+            satisfying the following conditions:
+            \begin{enumerate}
+        	\item % 1
+        	    $i_0$ belongs to $B(k_0, P^{k_0})$ for all $q \in \{2, \ldots, n\}$
+        	    such that $\sigma(k_q) \geq \sigma(k_0)$.
+        	\item % 2
+        	    $i_0$ belongs to $\overline{B(k_0, P^{k_0})}$ for all $q \in \{2,
+        	    \ldots, n\}$ such that $\sigma(k_q) \leq \sigma(k_0)$.
+            \end{enumerate}
+       \item
+	    \(
+                    \left|
+                        \bigcap_{q=2:\sigma(k_q) = \sigma(k_2)}^n
+                            P^k_q
+                    \right|
+	        \geq
+	            2
+	    \)
+    \end{enumerate}
+    \noindent
+    Finally, all facets of \rm{(SPSP)} whose associated clique in $G$ consist of
+    only $x$-variables are contained in family \eqref{eqn:xineqs}.
+\end{theorem}
+
+\begin{proof}
+    Let us suppose that conditions above are not fulfilled, and define $(V, E)$,
+    $(V', E')$ as in the proof above. We have two options:
+    \begin{enumerate}
+        \item
+	    There exists some $(k_0, i_0) \in K \times S^{k_0}$ fulfilling the
+	    above conditions over $(k_0, i_0)$. Then, Point 3 of Proposition
+	    \ref{pro:characterisation} we have that the node $x_{i_0}^{k_0}$ is adjacent
+	    to every node in $V'$, contradicting the fact that $V'$ is a clique.
+	\item
+	    Last condition,
+            \(
+                    \left|
+                        \bigcap_{q=2:\sigma(k_q) = \sigma(k_2)}^n
+                            P^k_q
+                    \right|
+	        \geq
+	            2
+	    \),
+	    holds. Then, there cannot exist any $v$-variable that is adjacent to
+	    all other nodes within subgraph $V'$. If this were not the case, we
+	    would have $P^{k_2}=\{i\}$, and one of $\sigma(k_2) < \sigma(k_3)$
+	    or $n=2$ would hold. However, this would imply that
+	    $v_i^{\sigma(k_2)+1}$ be adjacent to every node in $V'$,
+	    contradicting the fact that the subgraph be maximal.
+    \end{enumerate}
+    Otherwise, the construction in last proof above ensures that the graph be
+    maximal, and thus, that the corresponding inequality is a facet.
+\end{proof}
+
+\begin{theorem}
+    \label{thm:vineqs}
+
+    For any nonempty set of price indices
+    $
+        L =         \{\ell_1, \ldots, \ell_p\}
+          \subseteq \{1,      \ldots, M     \}
+    $,
+    product \ii and
+    \begin{itemize}
+        \item % \ell_1 > 1
+	    if $\ell_1 > 1$, customer $k_1$ such that $\sigma(k_1) = \ell_1 -
+	    1$, $i \in S^{k_1}$, and set $P^{k_1} = \{i\}$; otherwise $P^{k_1} =
+	    \varnothing$;
+	\item % \ell_p < M
+	    if $\ell_p < M$, customers $k_2, \ldots, k_n$, $n \geq 2$, such that
+	    $
+	        \ell_p = \sigma(k_2) \leq \ldots \leq \sigma(k_n)
+	    $
+	    ($n = 1$ otherwise) and non empty pairwise disjoint sets of products
+	    $P^{k_q} \subseteq S^{k_q} - \{i\}$, $q \in \{2, \ldots, n\}$ such
+	    that $P^{k_2} \subseteq \overline{B(k_2, i)}$ and
+            \begin{equation*}
+                P^{k_q} \subseteq
+                        \left(
+                            \bigcap_{r=2:\\ \sigma(k_r) < \sigma(k_q)}^{q-1}
+                                \overline{B(k_q, P^{k_r})}
+                        \right)
+                    \bigcap
+                        \left(
+                            \bigcap_{r=2:\\ \sigma(k_r) = \sigma(k_q)}^{q-1}
+                                \left(
+                                        \overline{B(k_q, P^{k_r})}
+                                    \cup
+                                        B(k_r, P^{k_r})
+                                \right)
+                        \right)
+            \end{equation*}
+	    for all $q \in \{3, \ldots, n\}$, the following are valid
+	    restrictions for formulations \slla and \sllb:
+	    \begin{equation}
+    	        \label{eqn:vineqs}
+    	            \sum_{\ell \in L} v_i^\ell
+    	        +
+    	            \sum_{q=1}^n \sum_{j \in P^{k_q}} x_j^{k_q}
+    	        \leq
+    	            1
+	    \end{equation}
+    \end{itemize}
+    
+    In addition, inequalities of family \eqref{eqn:vineqs} are facets of
+    \rm{(SPSP)} iff there does not exist any client $k_0 \in K$ and $i_0 \in
+    S^{k_0} - \{i\}$ satisfying the following conditions:
+    \begin{itemize}
+        \item % 1
+            $\sigma(k_0) \geq \ell_p$
+        \item % 2
+	    $i_0$ belongs to $B(k_q, P^{k_q})$ for all $q \in \{1, \ldots, n\}$
+	    such that $\sigma(k_q) \geq \sigma(k_0)$.
+        \item % 3
+	    $i_0$ belongs to $\overline{B(k_0, P^{k_q})}$ for all $q \in \{1,
+	    \ldots, n\}$ such that $\sigma(k_q) \leq \sigma(k_0)$.
+    \end{itemize}
+    \noindent
+    Finally, all facets of \rm{(SPSP)} whose associated clique in $G$ consists
+    of only $x$-variables are contained in family \eqref{eqn:vineqs}.
+\end{theorem}
+
+\begin{proof}
+    The proof will be similar to that of Theorem \ref{thm:xineqs}. However, the
+    special structure for $v$ variables suggested by Lemma
+    \ref{lem:price-index-interval} will induce a case analysis on the
+    superindices of $v_i^\ell$.
+
+    Let us denote by $G = (V, E)$ the intersection graph of the set packing
+    subproblem (SPSP), and let $Q = (V', E')$ be a clique of $G$ containing some
+    $v$ variables. Since all variables within the clique are adjacent, Point 7
+    of Proposition \ref{pro:characterisation}, all variables within clique $V'$
+    must have the same subindex, which we may represent as $i$. Similarly, Lemma
+    \ref{lem:price-index-interval} asserts that all variables have consecutive
+    superindices, their set being represented as $L = \{\ell_1, \ldots,
+    \ell_p\}$. We will now prove that the conditions in the statement are all
+    met by following a case analysis on the extent of $L$.
+
+    \begin{itemize}
+        \item
+            $L = \{1, \ldots, M\}$.
+            
+	    If this is the case, we may employ Proposition
+	    \ref{pro:characterisation} in order to conclude that any $x$ node
+	    $x_j^k$ in the neighbourhood of $L$'s associated $v$ variables,
+	    $v_i^1, \ldots, v_i^M$ must satisfy conditions $\sigma(k) = M$ and
+	    $j \in \overline{B(k, i)}$. Since $\sigma(k) = M$ means $k$ is a
+	    richest customer, and the richest customers can purchase the product
+	    they prefer the most, we can infer that $\varnothing = P^{k_2} =
+	    \cdots = P^{k_n}$. Furthermore, Point 4 of Proposition
+	    \ref{pro:characterisation} does not provide us with any node which
+	    is adjacent to all $v$-nodes $v_i^\ell$, for all $\ell$. We may
+	    therefore conclude that $\{v_i^\ell \mid \ell \in L\}$ is a maximal
+	    complete subgraph of the intersection graph $G$.
+	\item
+	    There is some $\ell_1 > 1$ such that $L = \{\ell_1, \ldots, M\}$.
+
+	    In this case, there exists a node in the clique adjacent to all
+	    $v_i^\ell$ with $\ell \geq \ell_1$, but not to $v_i^{\ell_1-1}$.
+	    Furthermore, Proposition \ref{pro:characterisation} and Lemma
+	    \ref{lem:price-index-interval} allow us to more explicitly classify
+	    this node as an $x$-variable. Let us consider this node is $x_j^k$
+	    for some client $k$ and product $j$. By applying Point 5 of
+	    Proposition \ref{pro:characterisation} we cannot obtain any other
+	    node adjacent to $v_i^M$, so it follows that $\varnothing = P^{k_2}
+	    = \cdots = P^{k_n}$. Then, Point 4 of the same proposition asserts
+	    that $x_j^k$ has to be adjacent to all $v_i^\ell$ with $\ell \geq
+	    \ell_1$.. Therefore, $j = i$, and there exists some customer $k_1$
+	    with $\sigma(k_1) < \ell_1$ and $P^{k_1} = \{i\}$ such that $k =
+	    k_1$. Since, by construction, $x_i^{k_1}$ is not adjacent to $v$-node
+	    $v_i^{\ell_1-1}$, Point 4 allows us to conclude that $\sigma(k_1)
+	    \geq \ell_1 - 1$, and therefore $\sigma(k_1) = \ell_1 - 1$. Thus,
+	    the first point in the statement is verified.
+
+	    Let us now suppose that there exists some other node $x_j^k \in V'$.
+	    In this case, Point 4 of Proposition \ref{pro:characterisation}
+	    asserts that $x_j^k$ is adjacent to all $v_i^\ell$ with $\ell \geq
+	    \ell_1$. Consequently, $j$ must equal $i$. However, in this case
+	    Point 2 of the same proposition asserts that $x_i^k$ and $x_i^{k_1}$
+	    are not adjacent for any $k \neq k_1$, and therefore $\{v_i^\ell
+	    \mid \ell \geq \ell_1\}\cup\{x_i^{k_1}\}$ is in this case a clique
+	    in the intersection graph $V'$.
+	\item
+	    There is some $\ell_p < M$ such that $L = \{1, \ldots, \ell_q\}$.
+
+	    In a similar manner to that of last case, relations $v_i^\ell \notin
+	    V'$ for $\ell > \ell_p$, Lemma \ref{lem:price-index-interval} and
+	    Proposition \ref{pro:characterisation} imply the existence of an
+	    $x$-variable $x_{i_0}^k$ in $V'$ adjacent to $v_i^{\ell_p}$ but not
+	    to $v_i^{\ell_p+1}$. We cannot obtain any node adjacent to $v_i^1$
+	    by means of Point 4 of Proposition \ref{pro:characterisation}. Thus,
+	    $P^{k_1} = \varnothing$, and, by Point 5, $x_{i_0}^k$ and $v_i^\ell$
+	    are adjacent for all $\ell \leq \ell_p$. We may thus infer the
+	    existence of a customer $k_2$ with budget $\sigma(k_2) \geq \ell_p$
+	    and a subset of products $P^{k_2} \subseteq \overline{B(k_2, i)}$
+	    such that $i_0 \in P^{k_2}$and, by Point 5, $x_j^{k_2} \in V'$ for
+	    all $j \in P^{k_2}$. Furthermore, that $x_{i_0}^{k_2}$ is not
+	    adjacent to $v$-node $v_i^{\ell_p+1}$ allows us to conclude relation
+	    $\sigma(k_2) = \ell_p$ in the theorem statement. If there also exist
+	    customers $k_q$ for $3 \leq q \leq n$ with $\sigma(k_2) \leq
+	    \sigma(k_3) \leq \cdots \leq \sigma(k_n)$, and, associated to them,
+	    nonempty subsets $P^{k_q} \subseteq S^{k_q}$ such that $x_j^{k_q}
+	    \in F'$ for all $j \in P^{k_q}$, then an application of Point 2
+	    allows us to conclude that the $P^{k_i}$, $1 \leq i \leq n$ are
+	    pairwise disjoint. Furthermore, none of the $P^{k_q}$, $3 \leq q
+	    \leq n$, contains product $i$. If this were not the case, we would
+	    have $x_i^{k_q} \in V'$ for some $k_q$ with $\sigma(k_q) \geq
+	    \ell_p$ not adjacent to $v_i^{\ell_p}$, contradicting the assumption
+	    of $V'$ being a complete graph.
+	\item
+	    There exist $\ell_1 > 1$ and $\ell_p < M$ such that $L = \{\ell_1,
+	    \ldots, \ell_p\}$.
+
+	    This case is handled by combining the arguments of the two previous
+	    cases.
+    \end{itemize}
+\end{proof}
+
+Provided with these results, we are now able to assess the quality of (SPSP)'s
+inequalities. Indeed, cases 1 and 2 from the proof of Theorem \ref{thm:vineqs}
+assert that restrictions from families \eqref{eqn:spsp:b} and \eqref{eqn:spsp:d}
+are always facet-defining. Furthermore, theorem \ref{thm:xfacets} allows us to
+assert that all inequalities from \eqref{eqn:spsp:a} for which $|S^k| \geq 2$
+and there does not exist any pair $(k_0, i_0)$ in $K \times S^{k_0}$ satisfying
+$\sigma(k_0) \geq \sigma(k)$ and $i_0 \in \overline{B(k_0, S^k)}$. Certainly,
+this does not allow us to conclude that all inequalities in \eqref{eqn:spsp:a}
+are facet-defining, but it indicates that most of them are. In a similar manner,
+conditions from Theorem \ref{thm:vineqs} allow us to conclude that most
+restrictions of family \eqref{eqn:spsp:c} are facet-defining.
+
+It should be noted that being facet-defining in (SPSP) does not imply being
+facet-defining in either \slla or \sllb, for these formulations also include $z$
+variables and further restrictions. However, it does indicate that they are very
+tight, thus leading to fast solving times.

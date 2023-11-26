@@ -1,0 +1,157 @@
+\chapter*{Abstract (English)} % ------------------------------------------------
+
+The object of study of the present work is the Rank Pricing Problem (RPP), an
+optimisation problem in which some products must me priced so as to maximise
+their seller's gains. Now, we will present the RPP, and provide the reader a
+summary of the structure of this work.
+
+\paragraph*{}
+
+The Rank Pricing Problem presupposes the existence of a seller and of a set of
+clients. The seller offers various goods and wishes to prize them so as to
+maximise his benefits. In turn, each client is characterised by a list of
+preferences. These lists consist of products from those offered by the seller.
+Products in them are totally ordered, so that for each pair of distinct products
+$i_1$ and $i_2$ in the preference list of some customer $k$, either $i_1$ is
+strictly better than $i_2$ for $k$, or $i_2$ is strictly better than $i_1$ for
+$k$.  Furthermore, each client has a budget, which is the maximum amount of
+money he can afford to expend. In this setting, each client wishes to purchase
+exactly one product of maximum preference for him, and whose prices be less than
+or equal to his budget.
+
+The RPP has been treated in depth in the article \cite{ca:rpp}. Most of the
+results of chapters 2, 3 and 4 have been extracted from this source. Unless
+otherwise stated, all results should be considered to have been extracted from
+the article of Calvete et al.
+
+This work is divided in six chapters, whose contents we will now summarise.
+
+\paragraph*{}
+
+The present work requires several definitions and results from three different
+areas of optimisation. Namely linear, integer, and bilevel programming. These
+are presented in the first chapter.
+
+An understanding of linear programming is a necessary requirement for
+understanding the integer programming models which conform the core of this
+work. For this reason, it is treated in the first section of the introduction.
+After giving a short historical overview of this paradigm, several of its
+elementary definitions are presented. Furthermore, several results from duality
+theory are shortly presented. These are needed in the second chapter, where they
+are used to derive a single-level formulation from the bilevel formulations
+initially defined.
+
+Integer programming is introduced in the second section of the introduction.
+This paradigm is used to define most formulations in this work. Thus, several of
+its elementary definitions are presented, as well as comments on its
+computational complexity and on two of its resolution methods: branch and bound,
+and branch and cut. Furthermore, we introduce several results on totally
+unimodular matrices, which allow solving some integer problems as linear ones.
+These results are used in the second chapter.
+
+Finally, bilevel programming is presented in the third section of the
+introduction. This branch of optimisation studies the definition of problems
+with a bilevel structure. On the first level, one wishes to solve a linear or
+integer programming problem. Furthermore, amongst the restrictions of this first
+level problem stands the requirement that some variables be solution to a second
+problem. Bilevel programming permits giving some interpretations of the RPP in
+which the concepts of \emph{seller} and \emph{client} find quite natural
+translations as levels of a bilevel program. These matters are discussed in the
+second chapter.
+
+The introduction also contains a presentation of the RPP, and a section listing
+various results from graph theory. Their interest lies in that they allow
+translating statements about valid inequalities for some optimisation problem,
+the Set Packing Problem (SPP), into statements about subgraphs of a certain
+graph associated to the SPP.
+
+\paragraph*{}
+
+The second chapter presents four formulations for the RPP. Two bilevel
+formulations are first introduced. In these, the seller is represented by the
+first level problem, and each client is represented by one of the second level
+problems. In this situation, the seller prices its products so as to maximise
+his revenue, whereas clients choose a maximum-preference product of price less
+than or equal to their budgets. Which variables to use gives rise to two
+different formulations, \bnlp and $\rm{(BNL}^\textit{v}\rm{)}$. In
+$\rm{(BNL}^\textit{p}\rm{)}$, the price of product $i$ is represented by $p_i$,
+a real variable explicitly indicating $i$'s price.  Formulation \bnlv can be
+obtained from \bnlp by employing a result from \cite{ru:nonparametric}. This
+result states that in an optimal solution to the RPP, prices assigned to items
+belong to the set of all client budgets.  Representing this set by $B$, the
+price of item $i$ can then be represented by $v_i^\ell$. $v_i^\ell$ is a binary
+variable indicating whether product $i$ is assigned the price $\ell \in B$.
+
+Wishing to elude the high computational complexity of bilevel formulations, a
+single-level formulation \bnl is derived from \bnlv by characterising solutions
+to \bnlv's second level problem through linear restrictions. From (BNL), a
+second single-level formulation \slnl is derived. This last formulation will
+serve as basis for the rest of the work.
+
+\paragraph*{}
+
+The third chapter derives two linear formulations from \slnl. The reason for
+this change is again the desire to develop a method of the least possible
+computational complexity. Indeed, solving non linear problems is generally much
+harder than solving linear ones. The problematic element in \slnl is its
+objective function, which contains products of variables. Therefore,
+linealisation of \slnl is performed by transforming its objective function into
+a linear function. With this purpose, a new family of variables is defined which
+allows expressing the objective function in a linear manner. Furthermore, it is
+necessary to include several restrictions that give the new variables their
+intended meaning.
+
+The concrete election of which variables to add gives rise to two distinct
+formulations: \slla and $\rm{(SLL}_2\rm{)}$. The new variables in \slla are
+$z^k$, the benefit obtained by the seller from client $k$. New variables in
+\sllb are more granular: $z^k_i$, representing the benefit obtained by the
+seller by selling product $i$ to client $k$. Please note that if some client
+$k_0$ does not purchase a particular product $i_0$, then $z_{i_0}^{k_0} = 0$.
+
+Two families of valid inequations, one for each linear formulation, are defined.
+These are of exponential size, so that it becomes necessary to study them
+minutely in order to derive a separation algorithm for each family. These
+algorithms are provided as entry a fractional solution for some linear
+relaxation of the problem, and return a restriction from the family not
+satisfied by the fractional solution. Such methods are useful for solving the
+RPP by the branch and bound procedure.
+
+\paragraph*{}
+
+The objective of the fourth chapter, is to determine how good provided
+formulations are. This is in stark contrast with chapters 2 and 3, which merely
+tried to improve the existing formulations, without trying to assess how tight
+their restrictions were. First, it is noted that several restrictions from
+formulations \slla and \sllb give rise to the feasible region of a Set Packing
+Problem (SPP). This finding allows us to employ results presented at the end of
+Chapter \ref{chp:introduction} in order to determine which restrictions of \slla
+and \sllb are facets of the corresponding set packing subproblems. In order to
+do this, we need to consider the so-called intersection graph $G$ of the set
+packing subproblem. An important result due to Padberg
+\cite{pa:facial-structure} allows us to relate facets of the SPP to cliques in
+$G$. This change of language from set packing to graph theory allows us to
+conclude that most restrictions of the SPP are facets. This implies that no
+trivial improvement can be made to formulations \slla and $\rm{(SLL}_2\rm{)}$.
+
+\paragraph*{}
+
+Finally, the fifth chapter presents the author's original contributions. These
+are the extension of formulations \slla and \sllb to the envy-free CRPP and a
+computational study of these formulations.
+
+The Capacitated Rank Pricing Problem (CRPP) is an extension of the RPP. The
+additions it introduces are that it permits defining stock limitations and that
+it allows clients to have different budgets for different products. Stock
+limitations allow modelling situations in which a certain product cannot be
+produced without limitation. For instance, a theatre may offer 50 box seats and
+200 seats in the stalls, but no more because of lack of space. CRPP has two
+variants: with and without envy. A solution is said to present envy if some
+customer $k$ wishes to acquire a product $i$ whose price is less than or equal
+to his budget, but cannot do so because it has run out of stock. CRPP with envy
+is the CRPP version allowing solutions to present envy. Conversely, the
+envy-free version does not allow solutions that present envy. We have developed
+two formulations to the envy-free CRPP based in formulations \slla and \sllb.
+
+The fifth chapter also presents a computational study, in which the efficiency
+of the proposed CRPP formulations is assessed. For this purpose, several CRPP
+instances have been randomly generated.

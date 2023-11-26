@@ -1,0 +1,104 @@
+\begin{algorithm}
+    \DontPrintSemicolon
+    \KwData{
+	\fracsol~an optimal fractional solution of the linear relaxation of
+	\slla.
+    }
+    \KwResult{
+	An inequation from family \ref{eq:sll1-inequalities} separating
+	\fracsol~ if it can be found, nothing otherwise.
+    }
+    
+    \Begin{
+        \For{$k \in K$} {
+            \For{$\is$} {
+                $r_i^k = 0$\;
+                \While{
+                    $r_i^k < \sigma(k)$
+                    \rm{ and }
+                    $\ox_i^k \leq \sum_{\ell=r_i^k}^k \ov_i^\ell$
+                } {
+                    $r_i^k = r_i^k + 1$\;
+                }
+                \While{
+                    $r_i^k < \sigma(k)$
+                    \rm{ and }
+                    $S(r_i^k+1) - S(r_i^k) \leq 0$
+                } {
+                    $r_i^k = r_i^k + 1$\;
+                }
+
+                $
+                    Q_i^k = \{
+                        \ell \in \{1, \ldots, r_i^k - 1\} \mid \ox_i^k + \ov_i^\ell > 1
+                    \}
+                $
+            }
+            Return constraint
+            \[
+                z^k \leq \sum_\is \left(
+                    b^{r_i^k}x_i^k
+                    + \sum_{\ell=r_i^k+1}^{\sigma(k)}
+                        \left(b^\ell - b^{r_i^k}\right) v_i^\ell
+                    + \sum_{\ell\in Q_i^k}
+                        \left(b^\ell - b^{r_i^k}\right) \left(x_i^k+v_i^\ell-1\right)
+                \right)
+           \]
+           \noindent
+           iff it is violated by \fracsol.
+        }
+    }
+    \caption{Separation of inequalities for \slla.\label{alg:separation-1}}
+\end{algorithm}
+
+\begin{algorithm}
+    \DontPrintSemicolon
+    \KwData{
+	$(\ox_i^k, \ov_i^\ell, \oz_i^k)$~an optimal fractional solution of the
+	linear relaxation of \sllb.
+    }
+    \KwResult{
+	An inequation from family \ref{eq:sll2-inequalities} separating
+	\fracsol~ if it can be found, nothing otherwise.
+    }
+    
+    \Begin{
+        \For{$k \in K$} {
+            \For{$\is$} {
+                $r_i^k = 0$\;
+                \While{
+                    $r_i^k < \sigma(k)$
+                    \rm{ and }
+                    $\ox_i^k \leq \sum_{\ell=r_i^k}^k \ov_i^\ell$
+                } {
+                    $r_i^k = r_i^k + 1$\;
+                }
+                \While{
+                    $r_i^k < \sigma(k)$
+                    \rm{ and }
+                    $S(r_i^k+1) - S(r_i^k) \leq 0$
+                } {
+                    $r_i^k = r_i^k + 1$\;
+                }
+
+                $
+                    Q_i^k = \{
+                        \ell \in \{1, \ldots, r_i^k - 1\} \mid \ox_i^k + \ov_i^\ell > 1
+                    \}
+                $
+            }
+            Return constraint
+            \[
+                z_i^k \leq 
+                    b^{r_i^k}x_i^k
+                    + \sum_{\ell=r_i^k+1}^{\sigma(k)}
+                        \left(b^\ell - b^{r_i^k}\right) v_i^\ell
+                    + \sum_{\ell\in Q_i^k}
+                        \left(b^\ell - b^{r_i^k}\right)\left(x_i^k+v_i^\ell-1\right)
+           \]
+           \noindent
+           iff it is violated by $(\ox_i^k, \ov_i^\ell, \oz_i^k)$.
+        }
+    }
+    \caption{Separation of inequalities for \sllb.\label{alg:separation-2}}
+\end{algorithm}
